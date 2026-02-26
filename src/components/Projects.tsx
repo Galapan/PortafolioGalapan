@@ -20,16 +20,6 @@ const projects = [
     github: "https://github.com/Galapan/Portafolio",
     live: "https://aetherys.vercel.app/",
   },
-  {
-    title: "AI Image Generator",
-    description:
-      "A web interface for generating images using stable diffusion models with custom prompts.",
-    image:
-      "https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=2000&auto=format&fit=crop", // Placeholder
-    tags: ["TypeScript", "OpenAI API", "Tailwind"],
-    github: "#",
-    live: "#",
-  },
 ];
 
 export default function Projects() {
@@ -72,16 +62,19 @@ export default function Projects() {
               className="group relative flex flex-col will-change-transform will-change-opacity"
             >
               {/* Image Container */}
-              <div className="relative aspect-4/3 overflow-hidden rounded-2xl bg-zinc-900 border border-zinc-800 mb-6">
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+              <div
+                className="relative aspect-4/3 overflow-hidden rounded-2xl bg-zinc-900 border border-zinc-800 mb-6 group/image focus:outline-none cursor-pointer lg:cursor-default"
+                tabIndex={0}
+              >
+                <div className="absolute inset-0 bg-black/20 group-hover/image:bg-transparent group-focus/image:bg-transparent focus-within:bg-transparent transition-colors duration-500 z-10"></div>
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700 ease-[0.16,1,0.3,1] opacity-80 group-hover:opacity-100 will-change-transform"
+                  className="object-cover w-full h-full transform group-hover/image:scale-105 group-focus/image:scale-105 focus-within:scale-105 transition-transform duration-700 ease-[0.16,1,0.3,1] opacity-80 group-hover/image:opacity-100 group-focus/image:opacity-100 focus-within:opacity-100 will-change-transform"
                 />
 
                 {/* Hover Action Links */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 bg-black/40 backdrop-blur-sm gap-4">
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/image:opacity-100 group-focus/image:opacity-100 focus-within:opacity-100 transition-opacity duration-500 z-20 bg-black/40 backdrop-blur-sm gap-4">
                   <a
                     href={project.live}
                     className="p-3 bg-white text-black rounded-full hover:scale-110 transition-transform"

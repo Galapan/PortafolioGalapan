@@ -14,6 +14,7 @@ const techCategories = [
       "HTML5",
       "CSS3",
       "Tailwind CSS",
+      "Next.js",
     ],
   },
   {
@@ -22,24 +23,35 @@ const techCategories = [
     icon: Server,
     skills: [
       "Node.js",
-      "Express",
+      "Express.js",
       "PostgreSQL",
-      "MongoDB",
+      "Prisma",
       "REST APIs",
-      "GraphQL",
+      "Docker",
+      "Firebase",
+      "Supabase",
     ],
   },
   {
     id: "frameworks",
     title: "Frameworks",
     icon: Layers,
-    skills: ["Next.js", "Vite", "Framer Motion", "Redux", "Zustand"],
+    skills: ["Next.js", "Framer Motion", "Remix", "Zustand", "GraphQL"],
   },
   {
     id: "tools",
     title: "Tools",
     icon: Wrench,
-    skills: ["Git", "GitHub", "Figma", "Docker", "VS Code", "Webpack"],
+    skills: [
+      "Git",
+      "GitHub",
+      "Figma",
+      "Antigravity",
+      "VS Code",
+      "Prettier",
+      "Vercel",
+      "Vite",
+    ],
   },
 ];
 

@@ -53,11 +53,14 @@ export default function Hero() {
             {/* Glowing Orbs behind the avatar (grayscale) */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-zinc-700/20 rounded-full blur-[60px] md:blur-[80px] -z-10"></div>
 
-            <div className="relative aspect-square rounded-full p-2 border border-white/10 bg-zinc-900/50 backdrop-blur-md overflow-hidden shadow-2xl shadow-black/50 group">
+            <div
+              className="relative aspect-square rounded-full p-2 border border-white/10 bg-zinc-900/50 backdrop-blur-md overflow-hidden shadow-2xl shadow-black/50 group focus:outline-none cursor-pointer lg:cursor-default"
+              tabIndex={0}
+            >
               <img
                 src="/Profile.jpeg"
                 alt="Bastian Alessandro"
-                className="w-full h-full object-cover rounded-full filter grayscale hover:grayscale-0 transition-all duration-700 ease-in-out transform group-hover:scale-105 will-change-transform"
+                className="w-full h-full object-cover rounded-full filter grayscale hover:grayscale-0 group-focus:grayscale-0 transition-all duration-700 ease-in-out transform group-hover:scale-105 group-focus:scale-105 will-change-transform"
               />
               {/* Inner subtle glow ring */}
               <div className="absolute inset-0 rounded-full border border-white/5 pointer-events-none"></div>
