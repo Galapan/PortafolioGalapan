@@ -34,9 +34,11 @@ export default function Navbar() {
       <div className="container mx-auto px-6 lg:px-12 flex justify-between items-center max-w-7xl">
         <a
           href="#home"
-          className="text-2xl font-bold tracking-tighter text-white z-50"
+          className="text-2xl font-bold tracking-tighter text-white z-50 flex items-center gap-2"
         >
-          GALAPAN<span className="text-zinc-500">.</span>
+          <span>
+            BASTIAN<span className="text-zinc-500">.</span>
+          </span>
         </a>
 
         {/* Desktop Nav */}
