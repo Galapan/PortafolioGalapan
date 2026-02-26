@@ -55,7 +55,7 @@ export default function Hero() {
 
             <div className="relative aspect-square rounded-full p-2 border border-white/10 bg-zinc-900/50 backdrop-blur-md overflow-hidden shadow-2xl shadow-black/50 group">
               <img
-                src="../public/Profile.jpeg"
+                src="/Profile.jpeg"
                 alt="Bastian Alessandro"
                 className="w-full h-full object-cover rounded-full filter grayscale hover:grayscale-0 transition-all duration-700 ease-in-out transform group-hover:scale-105 will-change-transform"
               />

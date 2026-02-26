@@ -6,7 +6,7 @@ const projects = [
     title: "Sistema Integral de Gestión - SMyT",
     description:
       "Plataforma integral diseñada para la Secretaría de Movilidad y Transporte (SMyT) destinada a la digitalización, control y auditoría de depósitos vehiculares.",
-    image: "../public/SMYT.png", // Placeholder
+    image: "/SMyT.png", // Placeholder
     tags: ["Node.js", "Express", "PostgreSQL", "React"],
     github: "https://github.com/Galapan/SMyT",
     live: "#",
@@ -15,7 +15,7 @@ const projects = [
     title: "Landing page - Aetherys",
     description:
       "Landing page para un emprendimiento en el área de desarrollo de software, con un diseño moderno y atractivo.",
-    image: "../public/Aetherys2.png", // Placeholder
+    image: "/Aetherys2.png", // Placeholder
     tags: ["HTML5", "TailwindCSS", "JS"],
     github: "https://github.com/Galapan/Portafolio",
     live: "https://aetherys.vercel.app/",
