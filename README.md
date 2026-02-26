@@ -1,73 +1,73 @@
-# React + TypeScript + Vite
+# 🚀 Mi Portafolio Profesional
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+¡Bienvenido al repositorio de mi portafolio personal! Este proyecto muestra mi trabajo, habilidades y experiencia como desarrollador, construido con tecnologías web modernas enfocadas en el rendimiento, la accesibilidad y el diseño.
 
-Currently, two official plugins are available:
+## 🛠️ Tecnologías Utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Este proyecto fue desarrollado utilizando las siguientes herramientas:
 
-## React Compiler
+- **[React 19](https://react.dev/)** - Biblioteca principal para la interfaz de usuario.
+- **[TypeScript](https://www.typescriptlang.org/)** - Tipado estático para un código más robusto y mantenible.
+- **[Vite](https://vitejs.dev/)** - Entorno de desarrollo ultrarrápido y empaquetador eficiente.
+- **[Tailwind CSS v4](https://tailwindcss.com/)** - Framework CSS de utilidad para un diseño ágil, moderno y responsivo.
+- **[Framer Motion](https://www.framer.com/motion/)** - Biblioteca de animaciones para crear transiciones fluidas e interacciones dinámicas.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨ Características Principales
 
-## Expanding the ESLint configuration
+- **Diseño Responsivo:** Completamente adaptable a cualquier tamaño de pantalla (móvil, tablet, escritorio).
+- **Animaciones Suaves:** Transiciones de página y micro-interacciones utilizando Framer Motion para una experiencia premium.
+- **Rendimiento Optimizado:** Uso de Vite y React 19 para asegurar tiempos de carga rápidos.
+- **Modo Oscuro/Claro:** (Si aplica) Soporte para temas según la preferencia del usuario.
+- **Secciones Detalladas:**
+  - **Inicio (Hero):** Presentación impactante y clara.
+  - **Sobre Mí:** Detalles sobre mi trayectoria y enfoque profesional.
+  - **Proyectos:** Galería de trabajos recientes con demostraciones en vivo y código fuente.
+  - **Habilidades:** Conocimientos técnicos y herramientas que domino.
+  - **Contacto:** Formulario y enlaces a mis redes profesionales (LinkedIn, GitHub, etc.).
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Instalación y Uso Local
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Si deseas clonar y ejecutar este proyecto de forma local, sigue estos pasos:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+1. **Clonar el repositorio:**
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+   ```bash
+   git clone https://github.com/tu-usuario/tu-repositorio.git
+   ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. **Navegar al directorio del proyecto:**
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+   ```bash
+   cd Portfolio-project
+   ```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+3. **Instalar las dependencias:**
+
+   ```bash
+   npm install
+   ```
+
+4. **Iniciar el servidor de desarrollo:**
+
+   ```bash
+   npm run dev
+   ```
+
+5. **Abrir en el navegador:**
+   Visita `http://localhost:5173` para ver el portafolio en acción.
+
+## 🏗️ Comandos Disponibles
+
+- `npm run dev`: Inicia el servidor de desarrollo.
+- `npm run build`: Construye la aplicación optimizada para producción.
+- `npm run preview`: Sirve localmente la carpeta `dist` para probar la versión de producción.
+- `npm run lint`: Ejecuta ESLint para analizar el código en busca de errores y asegurar el estilo.
+
+## 📬 Contacto
+
+Si te ha interesado mi trabajo o tienes alguna pregunta, no dudes en conectar conmigo:
+
+- **LinkedIn:** [Tu Perfil de LinkedIn](#)
+- **Email:** [tu-correo@ejemplo.com](mailto:tu-correo@ejemplo.com)
+
+---
