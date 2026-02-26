@@ -36,7 +36,15 @@ const techCategories = [
     id: "frameworks",
     title: "Frameworks",
     icon: Layers,
-    skills: ["Next.js", "Framer Motion", "Remix", "Zustand", "GraphQL"],
+    skills: [
+      "Next.js",
+      "Framer Motion",
+      "Remix",
+      "Zustand",
+      "React native",
+      "Bootstrap",
+      "Electron",
+    ],
   },
   {
     id: "tools",

@@ -98,7 +98,7 @@ export default function Navbar() {
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="mt-4 px-8 py-3 text-lg font-medium text-black bg-white rounded-full hover:bg-zinc-200 transition-colors"
               >
-                Let's Talk
+                Hablemos
               </motion.a>
             </motion.div>
           )}
