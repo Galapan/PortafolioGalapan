@@ -1,12 +1,5 @@
 import { motion, type Variants } from "framer-motion";
-import {
-  ArrowRight,
-  MapPin,
-  Github,
-  Linkedin,
-  Twitter,
-  Instagram,
-} from "lucide-react";
+import { ArrowRight, MapPin, Github, Linkedin, Instagram } from "lucide-react";
 
 export default function Hero() {
   const containerVariants: Variants = {
