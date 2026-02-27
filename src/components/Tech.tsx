@@ -1,6 +1,38 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Monitor, Server, Layers, Wrench } from "lucide-react";
+import {
+  SiTypescript,
+  SiJavascript,
+  SiTailwindcss,
+  SiNextdotjs,
+  SiExpress,
+  SiPostgresql,
+  SiPrisma,
+  SiFirebase,
+  SiSupabase,
+  SiFramer,
+  SiRemix,
+  SiElectron,
+  SiPrettier,
+  SiVercel,
+  SiVite,
+  SiHtml5,
+  SiCss3,
+} from "react-icons/si";
+import { VscVscode } from "react-icons/vsc";
+import {
+  FaReact,
+  FaNodeJs,
+  FaDocker,
+  FaBootstrap,
+  FaGitAlt,
+  FaGithub,
+  FaFigma,
+  FaGoogle,
+} from "react-icons/fa";
+import { TbApi } from "react-icons/tb";
+import { GiBearFace } from "react-icons/gi";
 
 const techCategories = [
   {
@@ -8,13 +40,13 @@ const techCategories = [
     title: "Frontend",
     icon: Monitor,
     skills: [
-      "React",
-      "TypeScript",
-      "JavaScript",
-      "HTML5",
-      "CSS3",
-      "Tailwind CSS",
-      "Next.js",
+      { name: "React", Icon: FaReact },
+      { name: "TypeScript", Icon: SiTypescript },
+      { name: "JavaScript", Icon: SiJavascript },
+      { name: "HTML5", Icon: SiHtml5 },
+      { name: "CSS3", Icon: SiCss3 },
+      { name: "Tailwind CSS", Icon: SiTailwindcss },
+      { name: "Next.js", Icon: SiNextdotjs },
     ],
   },
   {
@@ -22,14 +54,14 @@ const techCategories = [
     title: "Backend",
     icon: Server,
     skills: [
-      "Node.js",
-      "Express.js",
-      "PostgreSQL",
-      "Prisma",
-      "REST APIs",
-      "Docker",
-      "Firebase",
-      "Supabase",
+      { name: "Node.js", Icon: FaNodeJs },
+      { name: "Express.js", Icon: SiExpress },
+      { name: "PostgreSQL", Icon: SiPostgresql },
+      { name: "Prisma", Icon: SiPrisma },
+      { name: "REST APIs", Icon: TbApi },
+      { name: "Docker", Icon: FaDocker },
+      { name: "Firebase", Icon: SiFirebase },
+      { name: "Supabase", Icon: SiSupabase },
     ],
   },
   {
@@ -37,13 +69,13 @@ const techCategories = [
     title: "Frameworks",
     icon: Layers,
     skills: [
-      "Next.js",
-      "Framer Motion",
-      "Remix",
-      "Zustand",
-      "React native",
-      "Bootstrap",
-      "Electron",
+      { name: "Next.js", Icon: SiNextdotjs },
+      { name: "Framer Motion", Icon: SiFramer },
+      { name: "Remix", Icon: SiRemix },
+      { name: "Zustand", Icon: GiBearFace },
+      { name: "React native", Icon: FaReact },
+      { name: "Bootstrap", Icon: FaBootstrap },
+      { name: "Electron", Icon: SiElectron },
     ],
   },
   {
@@ -51,19 +83,19 @@ const techCategories = [
     title: "Tools",
     icon: Wrench,
     skills: [
-      "Git",
-      "GitHub",
-      "Figma",
-      "Antigravity",
-      "VS Code",
-      "Prettier",
-      "Vercel",
-      "Vite",
+      { name: "Git", Icon: FaGitAlt },
+      { name: "GitHub", Icon: FaGithub },
+      { name: "Figma", Icon: FaFigma },
+      { name: "Antigravity", Icon: FaGoogle },
+      { name: "VS Code", Icon: VscVscode },
+      { name: "Prettier", Icon: SiPrettier },
+      { name: "Vercel", Icon: SiVercel },
+      { name: "Vite", Icon: SiVite },
     ],
   },
 ];
 
-export default function About() {
+export default function Tech() {
   const [activeTab, setActiveTab] = useState(techCategories[0].id);
 
   const activeCategory =
@@ -71,8 +103,8 @@ export default function About() {
 
   return (
     <section
-      id="about"
-      className="py-24 bg-zinc-950 text-white relative border-t border-white/5 overflow-hidden"
+      id="tech"
+      className="min-h-screen flex flex-col justify-center py-24 bg-zinc-950 text-white relative border-t border-white/5 overflow-hidden"
     >
       {/* Decorative background element for the active tab area */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-96 bg-zinc-900/20 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
@@ -92,7 +124,13 @@ export default function About() {
         </motion.div>
 
         {/* Tabs Row */}
-        <div className="flex flex-wrap justify-center gap-3 mb-8">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="flex flex-wrap justify-center gap-3 mb-8"
+        >
           {techCategories.map((category) => {
             const Icon = category.icon;
             const isActive = activeTab === category.id;
@@ -115,10 +153,16 @@ export default function About() {
               </button>
             );
           })}
-        </div>
+        </motion.div>
 
         {/* Skills Grid with Crossfade Animation */}
-        <div className="min-h-75 relative flex flex-col justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="min-h-75 relative flex flex-col justify-center"
+        >
           {/* Background Icon */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
             <AnimatePresence mode="wait">
@@ -154,7 +198,7 @@ export default function About() {
             >
               {activeCategory.skills.map((skill, index) => (
                 <motion.div
-                  key={`${activeTab}-${skill}`}
+                  key={`${activeTab}-${skill.name}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: index * 0.05 }}
@@ -162,16 +206,17 @@ export default function About() {
                     scale: 1.05,
                     transition: { duration: 0.15, ease: "easeOut" },
                   }}
-                  className="flex items-center justify-center p-6 bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl hover:border-white/20 hover:bg-white/10 hover:shadow-[0_8px_30px_rgba(255,255,255,0.08)] transition-colors cursor-default will-change-transform"
+                  className="flex items-center justify-center gap-3 p-6 bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl hover:border-white/20 hover:bg-white/10 hover:shadow-[0_8px_30px_rgba(255,255,255,0.08)] transition-colors cursor-default will-change-transform"
                 >
+                  <skill.Icon className="text-2xl text-zinc-300 group-hover:text-white transition-colors" />
                   <span className="text-zinc-200 font-medium text-center tracking-wide drop-shadow-md">
-                    {skill}
+                    {skill.name}
                   </span>
                 </motion.div>
               ))}
             </motion.div>
           </AnimatePresence>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

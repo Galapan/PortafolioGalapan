@@ -23,11 +23,6 @@ const projects = [
 ];
 
 export default function Projects() {
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-  };
-
   return (
     <section id="projects" className="py-24 bg-black text-white relative">
       <div className="container mx-auto px-6 lg:px-12 max-w-7xl">
@@ -54,9 +49,8 @@ export default function Projects() {
           {projects.map((project, index) => (
             <motion.div
               key={project.title}
-              variants={itemVariants}
-              initial="hidden"
-              whileInView="visible"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="group relative flex flex-col will-change-transform will-change-opacity"

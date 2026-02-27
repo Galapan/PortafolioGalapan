@@ -5,7 +5,8 @@ import { cn } from "../utils";
 
 const navLinks = [
   { name: "Home", href: "#home" },
-  { name: "Sobre mi", href: "#about" },
+  { name: "Sobre Mí", href: "#about" },
+  { name: "Tecnologías", href: "#tech" },
   { name: "Proyectos", href: "#projects" },
   { name: "Contacto", href: "#contact" },
 ];

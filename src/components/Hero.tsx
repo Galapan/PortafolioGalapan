@@ -25,7 +25,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-[90vh] flex flex-col justify-center items-center overflow-hidden bg-black text-white px-6 w-full pt-20"
+      className="relative min-h-[90vh] flex flex-col justify-center items-center overflow-hidden bg-black text-white px-6 w-full pt-20 pb-12 md:pb-0"
     >
       {/* Background with subtle grid and glow (Dark Theme adaptation of the light reference) */}
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] pointer-events-none"></div>
