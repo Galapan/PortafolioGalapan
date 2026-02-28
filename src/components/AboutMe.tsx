@@ -87,7 +87,7 @@ export default function AboutMe() {
             {/* Using a sleek placeholder gradient/texture for now, could be replaced with a real aesthetic photo */}
             <div className="absolute inset-0 bg-zinc-900 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-50 mix-blend-overlay"></div>
             <img
-              src="https://images.unsplash.com/photo-1555099962-4199c345e5dd?q=80&w=2070&auto=format&fit=crop"
+              src="https://i.pinimg.com/736x/e6/a6/cc/e6a6ccf08c38edd428e13fe317f978af.jpg"
               alt="Workspace setup"
               className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-105"
             />
@@ -96,7 +96,7 @@ export default function AboutMe() {
               <div className="flex items-center gap-3 text-white/80 backdrop-blur-md bg-black/30 w-fit px-4 py-2 rounded-full border border-white/10">
                 <Coffee size={18} />
                 <span className="text-sm font-medium">
-                  Impulsado por café y código
+                  Impulsado por la creatividad
                 </span>
               </div>
             </div>
