@@ -1,5 +1,12 @@
 import { motion, type Variants } from "framer-motion";
-import { ArrowRight, MapPin, Github, Linkedin, Instagram } from "lucide-react";
+import {
+  ArrowRight,
+  MapPin,
+  Github,
+  Linkedin,
+  Instagram,
+  Download,
+} from "lucide-react";
 
 export default function Hero() {
   const containerVariants: Variants = {
@@ -122,7 +129,7 @@ export default function Hero() {
             {/* CTAs */}
             <motion.div
               variants={itemVariants}
-              className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-8"
+              className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-8 flex-wrap"
             >
               <a
                 href="#projects"
@@ -139,6 +146,17 @@ export default function Hero() {
                 className="px-6 py-3 bg-transparent text-zinc-300 border border-zinc-700 rounded-xl font-medium hover:text-white hover:border-zinc-500 hover:bg-zinc-800/50 transition-all duration-300 w-full sm:w-auto justify-center text-center"
               >
                 Contactar
+              </a>
+              <a
+                href="/Bastian_Alessandro_CV.pdf"
+                download="Bastian_Alessandro_CV.pdf"
+                className="group px-6 py-3 bg-zinc-800 text-white border border-zinc-700 rounded-xl font-medium inline-flex items-center justify-center gap-2 hover:bg-zinc-700 hover:border-zinc-500 transition-all duration-300 w-full sm:w-auto"
+              >
+                Descargar CV
+                <Download
+                  size={16}
+                  className="group-hover:-translate-y-1 transition-transform"
+                />
               </a>
             </motion.div>
 

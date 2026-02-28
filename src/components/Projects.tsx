@@ -10,6 +10,7 @@ const projects = [
     tags: ["Node.js", "Express", "PostgreSQL", "React"],
     github: "https://github.com/Galapan/SMyT",
     live: "#",
+    inProgress: true,
   },
   {
     title: "Landing page - Aetherys",
@@ -69,20 +70,28 @@ export default function Projects() {
 
                 {/* Hover Action Links */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/image:opacity-100 group-focus/image:opacity-100 focus-within:opacity-100 transition-opacity duration-500 z-20 bg-black/40 backdrop-blur-sm gap-4">
-                  <a
-                    href={project.live}
-                    className="p-3 bg-white text-black rounded-full hover:scale-110 transition-transform"
-                    aria-label="View Live Project"
-                  >
-                    <ExternalLink size={20} />
-                  </a>
-                  <a
-                    href={project.github}
-                    className="p-3 bg-zinc-900 text-white rounded-full hover:scale-110 transition-transform border border-zinc-700 hover:border-zinc-500"
-                    aria-label="View Source Code"
-                  >
-                    <Github size={20} />
-                  </a>
+                  {project.inProgress ? (
+                    <span className="px-4 py-2 bg-zinc-800/90 text-zinc-200 text-sm font-medium rounded-full border border-zinc-700 backdrop-blur-md">
+                      En proceso de desarrollo
+                    </span>
+                  ) : (
+                    <>
+                      <a
+                        href={project.live}
+                        className="p-3 bg-white text-black rounded-full hover:scale-110 transition-transform"
+                        aria-label="View Live Project"
+                      >
+                        <ExternalLink size={20} />
+                      </a>
+                      <a
+                        href={project.github}
+                        className="p-3 bg-zinc-900 text-white rounded-full hover:scale-110 transition-transform border border-zinc-700 hover:border-zinc-500"
+                        aria-label="View Source Code"
+                      >
+                        <Github size={20} />
+                      </a>
+                    </>
+                  )}
                 </div>
               </div>
 
