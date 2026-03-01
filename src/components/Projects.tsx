@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Github, Wrench, MousePointerClick } from "lucide-react";
 
 const projects = [
   {
@@ -65,13 +65,23 @@ export default function Projects() {
                 <img
                   src={project.image}
                   alt={project.title}
+                  loading="lazy"
                   className="object-cover w-full h-full transform group-hover/image:scale-105 group-focus/image:scale-105 focus-within:scale-105 transition-transform duration-700 ease-[0.16,1,0.3,1] opacity-80 group-hover/image:opacity-100 group-focus/image:opacity-100 focus-within:opacity-100 will-change-transform"
                 />
 
+                {/* Mobile Tap Indicator */}
+                <div className="absolute top-4 right-4 md:hidden bg-black/40 backdrop-blur-md p-2 rounded-full z-10 pointer-events-none opacity-80">
+                  <MousePointerClick
+                    size={16}
+                    className="text-white animate-pulse"
+                  />
+                </div>
+
                 {/* Hover Action Links */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/image:opacity-100 group-focus/image:opacity-100 focus-within:opacity-100 transition-opacity duration-500 z-20 bg-black/40 backdrop-blur-sm gap-4">
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/image:opacity-100 group-focus/image:opacity-100 focus-within:opacity-100 transition-opacity duration-500 z-20 bg-black/40 backdrop-blur-md gap-4">
                   {project.inProgress ? (
-                    <span className="px-4 py-2 bg-zinc-800/90 text-zinc-200 text-sm font-medium rounded-full border border-zinc-700 backdrop-blur-md">
+                    <span className="flex items-center gap-2 px-5 py-2 bg-white/10 text-white text-sm font-medium rounded-full border border-white/20 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
+                      <Wrench size={16} className="text-zinc-200" />
                       En proceso de desarrollo
                     </span>
                   ) : (

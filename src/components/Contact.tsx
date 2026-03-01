@@ -87,7 +87,7 @@ export default function Contact() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
-            className="bg-black border border-zinc-800 p-8 md:p-12 rounded-3xl flex flex-col gap-6 will-change-transform will-change-opacity"
+            className="bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] p-8 md:p-12 rounded-3xl flex flex-col gap-6 will-change-transform will-change-opacity"
             onSubmit={handleSubmit}
           >
             <h3 className="text-2xl font-medium mb-6">Envia un mensaje</h3>
@@ -104,7 +104,7 @@ export default function Contact() {
                 id="name"
                 name="name"
                 required
-                className="bg-zinc-900/50 border border-zinc-800 rounded-2xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white transition-all"
+                className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white focus:bg-white/10 transition-all"
                 placeholder="Nombre..."
               />
             </motion.div>
@@ -121,7 +121,7 @@ export default function Contact() {
                 id="email"
                 name="email"
                 required
-                className="bg-zinc-900/50 border border-zinc-800 rounded-2xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white transition-all"
+                className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white focus:bg-white/10 transition-all"
                 placeholder="correo@ejemplo.com"
               />
             </motion.div>
@@ -140,8 +140,10 @@ export default function Contact() {
                 id="message"
                 name="message"
                 required
+                minLength={10}
+                maxLength={1000}
                 rows={5}
-                className="bg-zinc-900/50 border border-zinc-800 rounded-2xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white transition-all resize-none"
+                className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white focus:bg-white/10 transition-all resize-none"
                 placeholder="Hola..."
               ></textarea>
             </motion.div>

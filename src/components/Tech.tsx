@@ -199,14 +199,20 @@ export default function Tech() {
               {activeCategory.skills.map((skill, index) => (
                 <motion.div
                   key={`${activeTab}-${skill.name}`}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.05 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: index * 0.03,
+                    ease: "easeOut",
+                  }}
                   whileHover={{
                     scale: 1.05,
-                    transition: { duration: 0.15, ease: "easeOut" },
+                    y: -5,
+                    transition: { type: "spring", stiffness: 400, damping: 10 },
                   }}
-                  className="flex items-center justify-center gap-3 p-6 bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl hover:border-white/20 hover:bg-white/10 hover:shadow-[0_8px_30px_rgba(255,255,255,0.08)] transition-colors cursor-default will-change-transform"
+                  whileTap={{ scale: 0.95 }}
+                  className="group flex items-center justify-center gap-3 p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.5)] hover:border-white/30 hover:bg-white/10 hover:shadow-[0_8px_32px_rgba(255,255,255,0.05)] transition-colors duration-200 cursor-default will-change-transform"
                 >
                   <skill.Icon className="text-2xl text-zinc-300 group-hover:text-white transition-colors" />
                   <span className="text-zinc-200 font-medium text-center tracking-wide drop-shadow-md">

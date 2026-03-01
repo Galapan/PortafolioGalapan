@@ -67,7 +67,7 @@ export default function Hero() {
               <img
                 src="/Profile.jpeg"
                 alt="Bastian Alessandro"
-                className="w-full h-full object-cover rounded-full filter grayscale hover:grayscale-0 group-focus:grayscale-0 transition-all duration-700 ease-in-out transform group-hover:scale-105 group-focus:scale-105 will-change-transform"
+                className="w-full h-full object-cover rounded-full grayscale-0 md:grayscale md:group-hover:grayscale-0 md:group-focus:grayscale-0 transition-all duration-700 ease-in-out transform group-hover:scale-105 group-focus:scale-105 will-change-transform"
               />
               {/* Inner subtle glow ring */}
               <div className="absolute inset-0 rounded-full border border-white/5 pointer-events-none"></div>
@@ -178,12 +178,19 @@ export default function Hero() {
                   href: "https://www.linkedin.com/in/bastian-alessandro-s%C3%A1nchez-gallegos-882985282/",
                   label: "LinkedIn",
                 },
-              ].map((social) => {
+              ].map((social, index) => {
                 const Icon = social.icon;
                 return (
                   <motion.a
                     key={social.label}
-                    whileHover={{ y: -5 }}
+                    animate={{ y: [0, -6, 0] }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: index * 0.2,
+                    }}
+                    whileHover={{ scale: 1.1 }}
                     href={social.href}
                     target="_blank"
                     rel="noreferrer"

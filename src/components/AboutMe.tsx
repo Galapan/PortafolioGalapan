@@ -1,5 +1,5 @@
 import { motion, type Variants } from "framer-motion";
-import { Code2, Target, Coffee } from "lucide-react";
+import { Code2, Target, Sparkles } from "lucide-react";
 
 export default function AboutMe() {
   const containerVariants: Variants = {
@@ -89,13 +89,14 @@ export default function AboutMe() {
             <img
               src="https://i.pinimg.com/736x/e6/a6/cc/e6a6ccf08c38edd428e13fe317f978af.jpg"
               alt="Workspace setup"
-              className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-105"
+              loading="lazy"
+              className="w-full h-full object-cover grayscale-0 md:grayscale md:group-hover:grayscale-0 transition-all duration-700 scale-100 md:group-hover:scale-105"
             />
 
             <div className="absolute bottom-8 left-8 right-8 z-20">
-              <div className="flex items-center gap-3 text-white/80 backdrop-blur-md bg-black/30 w-fit px-4 py-2 rounded-full border border-white/10">
-                <Coffee size={18} />
-                <span className="text-sm font-medium">
+              <div className="flex items-center gap-3 text-white backdrop-blur-3xl bg-white/5 w-fit px-6 py-3 rounded-full border border-white/20 shadow-[0_12px_40px_0_rgba(0,0,0,0.6)]">
+                <Sparkles size={18} className="text-white animate-pulse" />
+                <span className="text-sm font-bold tracking-wider">
                   Impulsado por la creatividad
                 </span>
               </div>

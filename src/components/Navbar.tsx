@@ -8,7 +8,6 @@ const navLinks = [
   { name: "Sobre Mí", href: "#about" },
   { name: "Tecnologías", href: "#tech" },
   { name: "Proyectos", href: "#projects" },
-  { name: "Contacto", href: "#contact" },
 ];
 
 export default function Navbar() {
@@ -23,12 +22,23 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isMobileMenuOpen]);
+
   return (
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         isScrolled
-          ? "py-4 bg-black/40 backdrop-blur-md border-b border-white/10"
+          ? "py-4 bg-zinc-950/60 backdrop-blur-2xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)]"
           : "py-6 bg-transparent",
       )}
     >
