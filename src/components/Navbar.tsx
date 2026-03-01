@@ -14,6 +14,19 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const handleScrollToSection = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
+    e.preventDefault();
+    const targetId = href.replace(/.*\#/, "");
+    const elem = document.getElementById(targetId);
+    if (elem) {
+      elem.scrollIntoView({ behavior: "smooth" });
+    }
+    setIsMobileMenuOpen(false);
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -45,6 +58,7 @@ export default function Navbar() {
       <div className="container mx-auto px-6 lg:px-12 flex justify-between items-center max-w-7xl">
         <a
           href="#home"
+          onClick={(e) => handleScrollToSection(e, "#home")}
           className="text-2xl font-bold tracking-tighter text-white z-50 flex items-center gap-2"
         >
           <span>
@@ -58,14 +72,16 @@ export default function Navbar() {
             <a
               key={link.name}
               href={link.href}
+              onClick={(e) => handleScrollToSection(e, link.href)}
               className="text-sm font-medium text-zinc-300 hover:text-white transition-colors relative group"
             >
               {link.name}
-              <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></span>
             </a>
           ))}
           <a
             href="#contact"
+            onClick={(e) => handleScrollToSection(e, "#contact")}
             className="px-5 py-2.5 text-sm font-medium text-black bg-white rounded-full hover:bg-zinc-200 transition-colors"
           >
             Hablemos
@@ -97,7 +113,7 @@ export default function Navbar() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * i }}
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={(e: any) => handleScrollToSection(e, link.href)}
                   className="text-3xl font-bold text-zinc-300 hover:text-white transition-colors"
                 >
                   {link.name}
@@ -108,7 +124,7 @@ export default function Navbar() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
                 href="#contact"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={(e: any) => handleScrollToSection(e, "#contact")}
                 className="mt-4 px-8 py-3 text-lg font-medium text-black bg-white rounded-full hover:bg-zinc-200 transition-colors"
               >
                 Hablemos

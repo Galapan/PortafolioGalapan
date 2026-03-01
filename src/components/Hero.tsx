@@ -29,6 +29,18 @@ export default function Hero() {
     },
   };
 
+  const handleScrollToSection = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
+    e.preventDefault();
+    const targetId = href.replace(/.*\#/, "");
+    const elem = document.getElementById(targetId);
+    if (elem) {
+      elem.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section
       id="home"
@@ -133,6 +145,7 @@ export default function Hero() {
             >
               <a
                 href="#projects"
+                onClick={(e) => handleScrollToSection(e, "#projects")}
                 className="group px-8 py-3 bg-white text-black rounded-xl font-medium inline-flex items-center justify-center gap-2 hover:bg-zinc-200 transition-all duration-300 shadow-lg shadow-white/5 w-full sm:w-auto"
               >
                 Ver Proyectos
@@ -143,6 +156,7 @@ export default function Hero() {
               </a>
               <a
                 href="#contact"
+                onClick={(e) => handleScrollToSection(e, "#contact")}
                 className="px-6 py-3 bg-transparent text-zinc-300 border border-zinc-700 rounded-xl font-medium hover:text-white hover:border-zinc-500 hover:bg-zinc-800/50 transition-all duration-300 w-full sm:w-auto justify-center text-center"
               >
                 Contactar
