@@ -148,8 +148,8 @@ export default function Hero() {
                 Contactar
               </a>
               <a
-                href="/Bastian_Alessandro_CV.pdf"
-                download="Bastian_Alessandro_CV.pdf"
+                href="/SanchezGallegosBastianAlessandro_CV.pdf"
+                download="SanchezGallegosBastianAlessandro_CV.pdf"
                 className="group px-6 py-3 bg-zinc-800 text-white border border-zinc-700 rounded-xl font-medium inline-flex items-center justify-center gap-2 hover:bg-zinc-700 hover:border-zinc-500 transition-all duration-300 w-full sm:w-auto"
               >
                 Descargar CV

@@ -118,7 +118,17 @@ export default function Tech() {
           className="mb-16 flex flex-col items-center text-center"
         >
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-            Habilidades <span className="text-zinc-500">y Tecnologías</span>
+            <span
+              className={`transition-colors duration-300 ${activeTab === "frontend" || activeTab === "backend" ? "text-white" : "text-zinc-500"}`}
+            >
+              Habilidades
+            </span>
+            <span className="text-zinc-500 mx-2">y</span>
+            <span
+              className={`transition-colors duration-300 ${activeTab === "frameworks" || activeTab === "tools" ? "text-white" : "text-zinc-500"}`}
+            >
+              Tecnologías
+            </span>
           </h2>
           <div className="w-20 h-1 bg-white rounded-full"></div>
         </motion.div>

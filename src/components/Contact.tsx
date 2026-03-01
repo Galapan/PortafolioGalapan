@@ -45,36 +45,36 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="py-24 bg-zinc-950 text-white relative border-t border-zinc-900"
+      className="py-10 md:py-24 bg-zinc-950 text-white relative border-t border-zinc-900 scroll-mt-24"
     >
       <div className="container mx-auto px-6 lg:px-12 max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8 }}
-            className="flex flex-col h-full will-change-transform will-change-opacity"
+            className="flex flex-col h-full will-change-transform will-change-opacity justify-center"
           >
             <div>
-              <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+              <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-2 md:mb-6">
                 Deja tu<span className="text-zinc-500"> mensaje.</span>
               </h2>
-              <div className="w-20 h-1 bg-white rounded-full mb-8"></div>
-              <p className="text-xl text-zinc-400 mb-12 max-w-md font-light leading-relaxed">
+              <div className="w-16 md:w-20 h-1 bg-white rounded-full mb-4 md:mb-8"></div>
+              <p className="text-base md:text-xl text-zinc-400 mb-6 md:mb-12 max-w-md font-light leading-relaxed">
                 Estoy disponible para nuevos proyectos y oportunidades.
               </p>
             </div>
 
-            <div className="mt-auto flex flex-col gap-8">
+            <div className="mt-2 md:mt-auto flex flex-col gap-6 mb-6 lg:mb-0">
               <a
-                href="mailto:hello@example.com"
+                href="mailto:bastian4le@gmail.com"
                 className="group flex flex-col items-start hover:text-white transition-colors text-zinc-400"
               >
-                <span className="text-sm uppercase tracking-widest font-semibold mb-2 flex items-center gap-2">
+                <span className="text-sm uppercase tracking-widest font-semibold mb-1 md:mb-2 flex items-center gap-2">
                   <Mail size={16} /> Email
                 </span>
-                <span className="text-2xl md:text-3xl font-medium border-b border-transparent group-hover:border-white transition-colors pb-1">
+                <span className="text-lg md:text-2xl lg:text-3xl font-medium border-b border-transparent group-hover:border-white transition-colors pb-1">
                   bastian4le@gmail.com
                 </span>
               </a>
@@ -87,15 +87,20 @@ export default function Contact() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
-            className="bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] p-8 md:p-12 rounded-3xl flex flex-col gap-6 will-change-transform will-change-opacity"
+            className="bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] p-5 md:p-12 rounded-3xl flex flex-col gap-3 md:gap-6 will-change-transform will-change-opacity"
             onSubmit={handleSubmit}
           >
-            <h3 className="text-2xl font-medium mb-6">Envia un mensaje</h3>
+            <h3 className="text-lg md:text-2xl font-medium mb-1 md:mb-6">
+              Envia un mensaje
+            </h3>
 
-            <motion.div variants={itemVariants} className="flex flex-col gap-2">
+            <motion.div
+              variants={itemVariants}
+              className="flex flex-col gap-1 md:gap-2"
+            >
               <label
                 htmlFor="name"
-                className="text-sm font-medium text-zinc-400 ml-2"
+                className="text-xs md:text-sm font-medium text-zinc-400 ml-2"
               >
                 Nombre
               </label>
@@ -104,15 +109,18 @@ export default function Contact() {
                 id="name"
                 name="name"
                 required
-                className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white focus:bg-white/10 transition-all"
+                className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-4 py-2.5 md:px-6 md:py-4 text-white focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white focus:bg-white/10 transition-all text-sm md:text-base"
                 placeholder="Nombre..."
               />
             </motion.div>
 
-            <motion.div variants={itemVariants} className="flex flex-col gap-2">
+            <motion.div
+              variants={itemVariants}
+              className="flex flex-col gap-1 md:gap-2"
+            >
               <label
                 htmlFor="email"
-                className="text-sm font-medium text-zinc-400 ml-2"
+                className="text-xs md:text-sm font-medium text-zinc-400 ml-2"
               >
                 Email
               </label>
@@ -121,18 +129,18 @@ export default function Contact() {
                 id="email"
                 name="email"
                 required
-                className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white focus:bg-white/10 transition-all"
+                className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-4 py-2.5 md:px-6 md:py-4 text-white focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white focus:bg-white/10 transition-all text-sm md:text-base"
                 placeholder="correo@ejemplo.com"
               />
             </motion.div>
 
             <motion.div
               variants={itemVariants}
-              className="flex flex-col gap-2 grow"
+              className="flex flex-col gap-1 md:gap-2 grow"
             >
               <label
                 htmlFor="message"
-                className="text-sm font-medium text-zinc-400 ml-2"
+                className="text-xs md:text-sm font-medium text-zinc-400 ml-2"
               >
                 Mensaje
               </label>
@@ -142,8 +150,8 @@ export default function Contact() {
                 required
                 minLength={10}
                 maxLength={1000}
-                rows={5}
-                className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white focus:bg-white/10 transition-all resize-none"
+                rows={3}
+                className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-4 py-2.5 md:px-6 md:py-4 text-white focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white focus:bg-white/10 transition-all resize-none text-sm md:text-base"
                 placeholder="Hola..."
               ></textarea>
             </motion.div>
@@ -153,16 +161,16 @@ export default function Contact() {
               whileTap={status !== "submitting" ? { scale: 0.98 } : undefined}
               type="submit"
               disabled={status === "submitting" || status === "success"}
-              className="mt-4 w-full group py-4 px-6 bg-white text-black rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-zinc-200 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+              className="mt-2 md:mt-4 w-full group py-3 md:py-4 px-6 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-white/20 hover:border-white/40 shadow-[0_4px_24px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_32px_rgba(255,255,255,0.05)] transition-all disabled:opacity-70 disabled:cursor-not-allowed text-sm md:text-base"
             >
               {status === "submitting" ? (
                 <>
-                  <Loader2 size={20} className="animate-spin" />
+                  <Loader2 size={18} className="animate-spin" />
                   <span>Enviando...</span>
                 </>
               ) : status === "success" ? (
                 <>
-                  <CheckCircle2 size={20} className="text-green-600" />
+                  <CheckCircle2 size={18} className="text-green-600" />
                   <span>¡Enviado!</span>
                 </>
               ) : status === "error" ? (
@@ -171,7 +179,7 @@ export default function Contact() {
                 <>
                   <span>Enviar</span>
                   <ArrowRight
-                    size={20}
+                    size={18}
                     className="group-hover:translate-x-1 transition-transform"
                   />
                 </>
