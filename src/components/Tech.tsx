@@ -113,7 +113,7 @@ export default function Tech() {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.8 }}
           className="mb-16 flex flex-col items-center text-center"
         >
@@ -137,7 +137,7 @@ export default function Tech() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.6, delay: 0.1 }}
           className="flex flex-wrap justify-center gap-3 mb-8"
         >
@@ -169,7 +169,7 @@ export default function Tech() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           className="min-h-75 relative flex flex-col justify-center"
         >
@@ -222,7 +222,7 @@ export default function Tech() {
                     transition: { type: "spring", stiffness: 400, damping: 10 },
                   }}
                   whileTap={{ scale: 0.95 }}
-                  className="group flex items-center justify-center gap-3 p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.5)] hover:border-white/30 hover:bg-white/10 hover:shadow-[0_8px_32px_rgba(255,255,255,0.05)] transition-colors duration-200 cursor-default will-change-transform"
+                  className="group flex items-center justify-center gap-3 p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.5)] hover:border-white/30 hover:bg-white/10 hover:shadow-[0_8px_32px_rgba(255,255,255,0.05)] transition-colors duration-200 cursor-default will-change-transform transform-gpu backface-hidden"
                 >
                   <skill.Icon className="text-2xl text-zinc-300 group-hover:text-white transition-colors" />
                   <span className="text-zinc-200 font-medium text-center tracking-wide drop-shadow-md">

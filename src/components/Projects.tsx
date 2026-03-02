@@ -30,7 +30,7 @@ export default function Projects() {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.8 }}
           className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6"
         >
@@ -52,13 +52,13 @@ export default function Projects() {
               key={project.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="group relative flex flex-col will-change-transform will-change-opacity"
+              className="group relative flex flex-col will-change-transform will-change-opacity transform-gpu backface-hidden"
             >
               {/* Image Container */}
               <div
-                className="relative aspect-4/3 overflow-hidden rounded-2xl bg-zinc-900 border border-zinc-800 mb-6 group/image focus:outline-none cursor-pointer lg:cursor-default"
+                className="relative aspect-4/3 overflow-hidden rounded-2xl bg-zinc-900 border border-zinc-800 mb-6 group/image focus:outline-none cursor-pointer lg:cursor-default transform-gpu backface-hidden"
                 tabIndex={0}
               >
                 <div className="absolute inset-0 bg-black/20 group-hover/image:bg-transparent group-focus/image:bg-transparent focus-within:bg-transparent transition-colors duration-500 z-10"></div>

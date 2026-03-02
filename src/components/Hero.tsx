@@ -67,13 +67,13 @@ export default function Hero() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: "easeOut" }}
-            className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-[400px] flex-shrink-0 will-change-transform will-change-opacity"
+            className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-[400px] flex-shrink-0 will-change-transform will-change-opacity transform-gpu backface-hidden"
           >
             {/* Glowing Orbs behind the avatar (grayscale) */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-zinc-700/20 rounded-full blur-[60px] md:blur-[80px] -z-10"></div>
 
             <div
-              className="relative aspect-square rounded-full p-2 border border-white/10 bg-zinc-900/50 backdrop-blur-md overflow-hidden shadow-2xl shadow-black/50 group focus:outline-none cursor-pointer lg:cursor-default"
+              className="relative aspect-square rounded-full p-2 border border-white/10 bg-zinc-900/50 backdrop-blur-md overflow-hidden shadow-2xl shadow-black/50 group focus:outline-none cursor-pointer lg:cursor-default transform-gpu backface-hidden"
               tabIndex={0}
             >
               <img
@@ -91,7 +91,7 @@ export default function Hero() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="flex flex-col items-center md:items-start text-center md:text-left w-full will-change-transform will-change-opacity"
+            className="flex flex-col items-center md:items-start text-center md:text-left w-full will-change-transform will-change-opacity transform-gpu backface-hidden"
           >
             {/* Overline / Welcome Text */}
             <motion.div variants={itemVariants} className="mb-4">

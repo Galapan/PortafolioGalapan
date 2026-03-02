@@ -26,7 +26,7 @@ export default function AboutMe() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, amount: 0.1 }}
           className="flex flex-col md:flex-row gap-16 items-center"
         >
           {/* Text Content */}
@@ -81,7 +81,7 @@ export default function AboutMe() {
           {/* Aesthetic Element / Image */}
           <motion.div
             variants={itemVariants}
-            className="w-full md:w-1/2 relative aspect-4/5 rounded-3xl overflow-hidden group"
+            className="w-full md:w-1/2 relative aspect-4/5 rounded-3xl overflow-hidden group transform-gpu backface-hidden"
           >
             <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent z-10"></div>
             {/* Using a sleek placeholder gradient/texture for now, could be replaced with a real aesthetic photo */}

@@ -12,7 +12,7 @@ export default function ScrollProgress() {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 right-0 h-1 bg-linear-to-r from-zinc-700 via-zinc-400 to-white origin-left z-60 rounded-r-full shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+      className="fixed top-0 left-0 right-0 h-1 bg-linear-to-r from-zinc-700 via-zinc-400 to-white origin-left z-60 rounded-r-full shadow-[0_0_10px_rgba(255,255,255,0.5)] transform-gpu backface-hidden"
       style={{ scaleX }}
     />
   );

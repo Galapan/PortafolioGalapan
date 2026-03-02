@@ -52,9 +52,9 @@ export default function Contact() {
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.8 }}
-            className="flex flex-col h-full will-change-transform will-change-opacity justify-center"
+            className="flex flex-col h-full will-change-transform will-change-opacity justify-center transform-gpu backface-hidden"
           >
             <div>
               <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-2 md:mb-6">
@@ -86,8 +86,8 @@ export default function Contact() {
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] p-5 md:p-12 rounded-3xl flex flex-col gap-3 md:gap-6 will-change-transform will-change-opacity"
+            viewport={{ once: true, amount: 0.1 }}
+            className="bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] p-5 md:p-12 rounded-3xl flex flex-col gap-3 md:gap-6 will-change-transform will-change-opacity transform-gpu backface-hidden"
             onSubmit={handleSubmit}
           >
             <h3 className="text-lg md:text-2xl font-medium mb-1 md:mb-6">
