@@ -19,7 +19,7 @@ const projects = [
     image: "/Aetherys2.png", // Placeholder
     tags: ["HTML5", "TailwindCSS", "JS"],
     github: "https://github.com/Galapan/Portafolio",
-    live: "https://aetherys.vercel.app/",
+    live: "https://portafolio-fawn-three-79.vercel.app/",
   },
 ];
 
