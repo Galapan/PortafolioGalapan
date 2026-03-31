@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ExternalLink, Github, Wrench, MousePointerClick } from "lucide-react";
+import { ExternalLink, Github, MousePointerClick } from "lucide-react";
 
 const projects = [
   {
@@ -8,9 +8,7 @@ const projects = [
       "Plataforma integral diseñada para la Secretaría de Movilidad y Transporte (SMyT) destinada a la digitalización, control y auditoría de depósitos vehiculares.",
     image: "/SMyT.png", // Placeholder
     tags: ["Node.js", "Express", "PostgreSQL", "React"],
-    github: "https://github.com/Galapan/SMyT",
-    live: "#",
-    inProgress: true,
+    live: "https://s-my-t.vercel.app/",
   },
   {
     title: "Landing page - Aetherys",
@@ -79,13 +77,8 @@ export default function Projects() {
 
                 {/* Hover Action Links */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/image:opacity-100 group-focus/image:opacity-100 focus-within:opacity-100 transition-opacity duration-500 z-20 bg-black/40 backdrop-blur-md gap-4">
-                  {project.inProgress ? (
-                    <span className="flex items-center gap-2 px-5 py-2 bg-white/10 text-white text-sm font-medium rounded-full border border-white/20 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
-                      <Wrench size={16} className="text-zinc-200" />
-                      En proceso de desarrollo
-                    </span>
-                  ) : (
-                    <>
+                  <>
+                    {project.live && (
                       <a
                         href={project.live}
                         className="p-3 bg-white text-black rounded-full hover:scale-110 transition-transform"
@@ -93,6 +86,8 @@ export default function Projects() {
                       >
                         <ExternalLink size={20} />
                       </a>
+                    )}
+                    {project.github && (
                       <a
                         href={project.github}
                         className="p-3 bg-zinc-900 text-white rounded-full hover:scale-110 transition-transform border border-zinc-700 hover:border-zinc-500"
@@ -100,8 +95,8 @@ export default function Projects() {
                       >
                         <Github size={20} />
                       </a>
-                    </>
-                  )}
+                    )}
+                  </>
                 </div>
               </div>
 
