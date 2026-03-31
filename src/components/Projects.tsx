@@ -1,8 +1,10 @@
+import React from "react";
 import { motion } from "framer-motion";
 import { ExternalLink, Github, MousePointerClick } from "lucide-react";
 
 const projects = [
   {
+    id: 1,
     title: "Sistema Integral de Gestión - SMyT",
     description:
       "Plataforma integral diseñada para la Secretaría de Movilidad y Transporte (SMyT) destinada a la digitalización, control y auditoría de depósitos vehiculares.",
@@ -11,6 +13,7 @@ const projects = [
     live: "https://s-my-t.vercel.app/",
   },
   {
+    id: 2,
     title: "Landing page - Aetherys",
     description:
       "Landing page para un emprendimiento en el área de desarrollo de software, con un diseño moderno y atractivo.",
@@ -21,7 +24,26 @@ const projects = [
   },
 ];
 
-export default function Projects() {
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6 },
+  },
+};
+
+export default React.memo(function Projects() {
   return (
     <section id="projects" className="py-24 bg-black text-white relative">
       <div className="container mx-auto px-6 lg:px-12 max-w-7xl">
@@ -44,19 +66,22 @@ export default function Projects() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-          {projects.map((project, index) => (
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12"
+        >
+          {projects.map((project) => (
             <motion.div
-              key={project.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="group relative flex flex-col will-change-transform will-change-opacity transform-gpu backface-hidden"
+              key={project.id}
+              variants={itemVariants}
+              className="group relative flex flex-col"
             >
               {/* Image Container */}
               <div
-                className="relative aspect-4/3 overflow-hidden rounded-2xl bg-zinc-900 border border-zinc-800 mb-6 group/image focus:outline-none cursor-pointer lg:cursor-default transform-gpu backface-hidden"
+                className="relative aspect-4/3 overflow-hidden rounded-2xl bg-zinc-900 border border-zinc-800 mb-6 group/image focus:outline-none cursor-pointer lg:cursor-default"
                 tabIndex={0}
               >
                 <div className="absolute inset-0 bg-black/20 group-hover/image:bg-transparent group-focus/image:bg-transparent focus-within:bg-transparent transition-colors duration-500 z-10"></div>
@@ -64,7 +89,8 @@ export default function Projects() {
                   src={project.image}
                   alt={project.title}
                   loading="lazy"
-                  className="object-cover w-full h-full transform group-hover/image:scale-105 group-focus/image:scale-105 focus-within:scale-105 transition-transform duration-700 ease-[0.16,1,0.3,1] opacity-80 group-hover/image:opacity-100 group-focus/image:opacity-100 focus-within:opacity-100 will-change-transform"
+                  decoding="async"
+                  className="object-cover w-full h-full transform group-hover/image:scale-105 group-focus/image:scale-105 focus-within:scale-105 transition-transform duration-700 ease-[0.16,1,0.3,1] opacity-80 group-hover/image:opacity-100 group-focus/image:opacity-100 focus-within:opacity-100"
                 />
 
                 {/* Mobile Tap Indicator */}
@@ -119,8 +145,8 @@ export default function Projects() {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
-}
+});
