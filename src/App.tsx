@@ -4,10 +4,11 @@ import AboutMe from "./components/AboutMe";
 import Projects from "./components/Projects";
 import Contact from "./components/Contact";
 import Tech from "./components/Tech";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
-    <div className="bg-black min-h-screen text-white font-sans selection:bg-white selection:text-black">
+    <div className="bg-zinc-950 min-h-screen text-white font-sans selection:bg-white selection:text-black">
       <Navbar />
       <main>
         <Hero />
@@ -16,6 +17,7 @@ function App() {
         <Projects />
         <Contact />
       </main>
+      <ScrollToTop />
     </div>
   );
 }

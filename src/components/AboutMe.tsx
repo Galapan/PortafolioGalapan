@@ -20,7 +20,7 @@ export default function AboutMe() {
   };
 
   return (
-    <section id="about" className="py-24 bg-zinc-950 text-white relative">
+    <section id="about" className="min-h-screen flex flex-col justify-center py-24 bg-zinc-950 text-white relative scroll-mt-20">
       <div className="container mx-auto px-6 lg:px-12 max-w-5xl">
         <motion.div
           variants={containerVariants}
@@ -30,7 +30,7 @@ export default function AboutMe() {
           className="flex flex-col md:flex-row gap-16 items-center"
         >
           {/* Text Content */}
-          <div className="w-full md:w-1/2 flex flex-col will-change-transform will-change-opacity">
+          <div className="w-full md:w-1/2 flex flex-col">
             <motion.div variants={itemVariants}>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
                 Sobre <span className="text-zinc-500">Mí.</span>
@@ -81,7 +81,7 @@ export default function AboutMe() {
           {/* Aesthetic Element / Image */}
           <motion.div
             variants={itemVariants}
-            className="w-full md:w-1/2 relative aspect-4/5 rounded-3xl overflow-hidden group transform-gpu backface-hidden"
+            className="w-full md:w-1/2 relative aspect-4/5 rounded-3xl overflow-hidden group transform-gpu"
           >
             <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent z-10"></div>
             {/* Using a sleek placeholder gradient/texture for now, could be replaced with a real aesthetic photo */}
@@ -90,6 +90,19 @@ export default function AboutMe() {
               src="https://i.pinimg.com/736x/e6/a6/cc/e6a6ccf08c38edd428e13fe317f978af.jpg"
               alt="Workspace setup"
               loading="lazy"
+              decoding="async"
+              onError={(e) => {
+                const target = e.currentTarget;
+                target.style.display = "none";
+                const parent = target.parentElement;
+                if (parent) {
+                  parent.classList.add(
+                    "bg-gradient-to-br",
+                    "from-zinc-800",
+                    "to-zinc-900",
+                  );
+                }
+              }}
               className="w-full h-full object-cover grayscale-0 md:grayscale md:group-hover:grayscale-0 transition-all duration-700 scale-100 md:group-hover:scale-105"
             />
 

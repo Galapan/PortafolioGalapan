@@ -3,9 +3,10 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    overscroll-behavior-y: none;
   }
 
   body {
-    @apply antialiased bg-black text-white;
+    @apply antialiased bg-zinc-950 text-white;
   }
 }

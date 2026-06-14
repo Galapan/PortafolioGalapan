@@ -1,7 +1,6 @@
 import { motion, type Variants } from "framer-motion";
 import {
   ArrowRight,
-  MapPin,
   Github,
   Linkedin,
   Instagram,
@@ -34,7 +33,7 @@ export default function Hero() {
     href: string,
   ) => {
     e.preventDefault();
-    const targetId = href.replace(/.*\#/, "");
+    const targetId = href.replace("#", "");
     const elem = document.getElementById(targetId);
     if (elem) {
       elem.scrollIntoView({ behavior: "smooth" });
@@ -44,7 +43,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-[90vh] flex flex-col justify-center items-center overflow-hidden bg-black text-white px-6 w-full pt-20 pb-12 md:pb-0"
+      className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden bg-zinc-950 text-white px-6 w-full pt-20 pb-12 md:pb-0 scroll-mt-20"
     >
       {/* Background with subtle grid and glow (Dark Theme adaptation of the light reference) */}
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] pointer-events-none"></div>
@@ -67,19 +66,22 @@ export default function Hero() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: "easeOut" }}
-            className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-[400px] flex-shrink-0 will-change-transform will-change-opacity transform-gpu backface-hidden"
+            className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-[400px] flex-shrink-0 transform-gpu"
           >
             {/* Glowing Orbs behind the avatar (grayscale) */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-zinc-700/20 rounded-full blur-[60px] md:blur-[80px] -z-10"></div>
 
             <div
-              className="relative aspect-square rounded-full p-2 border border-white/10 bg-zinc-900/50 backdrop-blur-md overflow-hidden shadow-2xl shadow-black/50 group focus:outline-none cursor-pointer lg:cursor-default transform-gpu backface-hidden"
+              className="relative aspect-square rounded-full p-2 border border-white/10 bg-zinc-900/50 backdrop-blur-md overflow-hidden shadow-2xl shadow-black/50 group focus:outline-none cursor-pointer lg:cursor-default transform-gpu"
               tabIndex={0}
             >
               <img
                 src="/Profile.jpeg"
                 alt="Bastian Alessandro"
-                className="w-full h-full object-cover rounded-full grayscale-0 md:grayscale md:group-hover:grayscale-0 md:group-focus:grayscale-0 transition-all duration-700 ease-in-out transform group-hover:scale-105 group-focus:scale-105 will-change-transform"
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+                className="w-full h-full object-cover rounded-full grayscale-0 md:grayscale md:group-hover:grayscale-0 md:group-focus:grayscale-0 transition-all duration-700 ease-in-out transform group-hover:scale-105 group-focus:scale-105"
               />
               {/* Inner subtle glow ring */}
               <div className="absolute inset-0 rounded-full border border-white/5 pointer-events-none"></div>
@@ -91,7 +93,7 @@ export default function Hero() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="flex flex-col items-center md:items-start text-center md:text-left w-full will-change-transform will-change-opacity transform-gpu backface-hidden"
+            className="flex flex-col items-center md:items-start text-center md:text-left w-full"
           >
             {/* Overline / Welcome Text */}
             <motion.div variants={itemVariants} className="mb-4">
@@ -134,7 +136,6 @@ export default function Hero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-zinc-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-zinc-500"></span>
               </div>
-              <MapPin size={16} className="text-zinc-600 hidden" />
               <span>México · Disponible para trabajo remoto</span>
             </motion.div>
 
@@ -143,35 +144,44 @@ export default function Hero() {
               variants={itemVariants}
               className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-8 flex-wrap"
             >
-              <a
+              <motion.a
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 href="#projects"
                 onClick={(e) => handleScrollToSection(e, "#projects")}
-                className="group px-8 py-3 bg-white text-black rounded-xl font-medium inline-flex items-center justify-center gap-2 hover:bg-zinc-200 transition-all duration-300 shadow-lg shadow-white/5 w-full sm:w-auto"
+                className="group px-8 py-3 bg-white text-black rounded-xl font-medium inline-flex items-center justify-center gap-2 hover:bg-zinc-200 transition-colors duration-300 shadow-lg shadow-white/5 w-full sm:w-auto"
               >
                 Ver Proyectos
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
                 />
-              </a>
-              <a
+              </motion.a>
+              <motion.a
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 href="#contact"
                 onClick={(e) => handleScrollToSection(e, "#contact")}
-                className="px-6 py-3 bg-transparent text-zinc-300 border border-zinc-700 rounded-xl font-medium hover:text-white hover:border-zinc-500 hover:bg-zinc-800/50 transition-all duration-300 w-full sm:w-auto justify-center text-center"
+                className="px-6 py-3 bg-transparent text-zinc-300 border border-zinc-700 rounded-xl font-medium hover:text-white hover:border-zinc-500 hover:bg-zinc-800/50 transition-colors duration-300 w-full sm:w-auto justify-center text-center"
               >
                 Contactar
-              </a>
-              <a
+              </motion.a>
+              <motion.a
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 href="/SanchezGallegosBastianAlessandro_CV.pdf"
                 download="SanchezGallegosBastianAlessandro_CV.pdf"
-                className="group px-6 py-3 bg-zinc-800 text-white border border-zinc-700 rounded-xl font-medium inline-flex items-center justify-center gap-2 hover:bg-zinc-700 hover:border-zinc-500 transition-all duration-300 w-full sm:w-auto"
+                className="group px-6 py-3 bg-zinc-800 text-white border border-zinc-700 rounded-xl font-medium inline-flex items-center justify-center gap-2 hover:bg-zinc-700 hover:border-zinc-500 transition-colors duration-300 w-full sm:w-auto"
               >
                 Descargar CV
                 <Download
                   size={16}
                   className="group-hover:-translate-y-1 transition-transform"
                 />
-              </a>
+              </motion.a>
             </motion.div>
 
             {/* Social Icons (Animated) */}
@@ -197,14 +207,20 @@ export default function Hero() {
                 return (
                   <motion.a
                     key={social.label}
-                    animate={{ y: [0, -6, 0] }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: index * 0.2,
+                    initial={{ y: 0 }}
+                    whileInView={{
+                      y: [0, -6, 0],
+                      transition: {
+                        duration: 3,
+                        repeat: 2,
+                        repeatType: "loop",
+                        ease: "easeInOut",
+                        delay: index * 0.2,
+                      },
                     }}
-                    whileHover={{ scale: 1.1 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    whileHover={{ scale: 1.15, y: -4 }}
+                    whileTap={{ scale: 0.95 }}
                     href={social.href}
                     target="_blank"
                     rel="noreferrer"

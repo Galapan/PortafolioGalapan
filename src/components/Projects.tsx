@@ -1,6 +1,5 @@
-import React from "react";
 import { motion } from "framer-motion";
-import { ExternalLink, Github, MousePointerClick } from "lucide-react";
+import { ExternalLink, Github } from "lucide-react";
 
 const projects = [
   {
@@ -43,9 +42,9 @@ const itemVariants = {
   },
 };
 
-export default React.memo(function Projects() {
+export default function Projects() {
   return (
-    <section id="projects" className="py-24 bg-black text-white relative">
+    <section id="projects" className="min-h-screen flex flex-col justify-center py-24 bg-zinc-950 text-white relative scroll-mt-20">
       <div className="container mx-auto px-6 lg:px-12 max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -80,49 +79,40 @@ export default React.memo(function Projects() {
               className="group relative flex flex-col"
             >
               {/* Image Container */}
-              <div
-                className="relative aspect-4/3 overflow-hidden rounded-2xl bg-zinc-900 border border-zinc-800 mb-6 group/image focus:outline-none cursor-pointer lg:cursor-default"
-                tabIndex={0}
-              >
-                <div className="absolute inset-0 bg-black/20 group-hover/image:bg-transparent group-focus/image:bg-transparent focus-within:bg-transparent transition-colors duration-500 z-10"></div>
+              <div className="relative aspect-4/3 overflow-hidden rounded-2xl bg-zinc-900 border border-zinc-800 mb-6 group/image md:focus-within:outline-none md:cursor-default">
+                <div className="absolute inset-0 bg-black/20 md:group-hover/image:bg-transparent md:focus-within:bg-transparent transition-colors duration-500 z-10"></div>
                 <img
                   src={project.image}
                   alt={project.title}
                   loading="lazy"
                   decoding="async"
-                  className="object-cover w-full h-full transform group-hover/image:scale-105 group-focus/image:scale-105 focus-within:scale-105 transition-transform duration-700 ease-[0.16,1,0.3,1] opacity-80 group-hover/image:opacity-100 group-focus/image:opacity-100 focus-within:opacity-100"
+                  className="object-cover w-full h-full transform md:group-hover/image:scale-105 md:focus-within:scale-105 transition-transform duration-700 ease-[0.16,1,0.3,1] opacity-80 md:group-hover/image:opacity-100 md:focus-within:opacity-100"
                 />
 
-                {/* Mobile Tap Indicator */}
-                <div className="absolute top-4 right-4 md:hidden bg-black/40 backdrop-blur-md p-2 rounded-full z-10 pointer-events-none opacity-80">
-                  <MousePointerClick
-                    size={16}
-                    className="text-white animate-pulse"
-                  />
-                </div>
-
-                {/* Hover Action Links */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/image:opacity-100 group-focus/image:opacity-100 focus-within:opacity-100 transition-opacity duration-500 z-20 bg-black/40 backdrop-blur-md gap-4">
-                  <>
-                    {project.live && (
-                      <a
-                        href={project.live}
-                        className="p-3 bg-white text-black rounded-full hover:scale-110 transition-transform"
-                        aria-label="View Live Project"
-                      >
-                        <ExternalLink size={20} />
-                      </a>
-                    )}
-                    {project.github && (
-                      <a
-                        href={project.github}
-                        className="p-3 bg-zinc-900 text-white rounded-full hover:scale-110 transition-transform border border-zinc-700 hover:border-zinc-500"
-                        aria-label="View Source Code"
-                      >
-                        <Github size={20} />
-                      </a>
-                    )}
-                  </>
+                {/* Desktop Hover Overlay Action Links */}
+                <div className="hidden md:flex absolute inset-0 items-center justify-center opacity-0 group-hover/image:opacity-100 group-focus-within/image:opacity-100 transition-opacity duration-500 z-20 bg-black/40 backdrop-blur-md gap-4">
+                  {project.live && (
+                    <a
+                      href={project.live}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-3 bg-white text-black rounded-full hover:scale-110 transition-transform"
+                      aria-label={`Ver ${project.title} en vivo`}
+                    >
+                      <ExternalLink size={20} />
+                    </a>
+                  )}
+                  {project.github && (
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-3 bg-zinc-900 text-white rounded-full hover:scale-110 transition-transform border border-zinc-700 hover:border-zinc-500"
+                      aria-label={`Ver código fuente de ${project.title}`}
+                    >
+                      <Github size={20} />
+                    </a>
+                  )}
                 </div>
               </div>
 
@@ -141,7 +131,35 @@ export default React.memo(function Projects() {
                 <h3 className="text-2xl font-semibold mb-2 transform group-hover:translate-x-1 transition-transform duration-300">
                   {project.title}
                 </h3>
-                <p className="text-zinc-400">{project.description}</p>
+                <p className="text-zinc-400 mb-4">{project.description}</p>
+
+                {/* Mobile/Tablet Action Links (always visible) */}
+                <div className="flex md:hidden gap-3">
+                  {project.live && (
+                    <a
+                      href={project.live}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-white text-black rounded-full text-sm font-medium hover:bg-zinc-200 transition-colors"
+                      aria-label={`Ver ${project.title} en vivo`}
+                    >
+                      <ExternalLink size={16} />
+                      Ver demo
+                    </a>
+                  )}
+                  {project.github && (
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-900 text-white border border-zinc-700 rounded-full text-sm font-medium hover:bg-zinc-800 hover:border-zinc-500 transition-colors"
+                      aria-label={`Ver código fuente de ${project.title}`}
+                    >
+                      <Github size={16} />
+                      Código
+                    </a>
+                  )}
+                </div>
               </div>
             </motion.div>
           ))}
@@ -149,4 +167,4 @@ export default React.memo(function Projects() {
       </div>
     </section>
   );
-});
+}

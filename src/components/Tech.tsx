@@ -46,7 +46,6 @@ const techCategories = [
       { name: "HTML5", Icon: SiHtml5 },
       { name: "CSS3", Icon: SiCss3 },
       { name: "Tailwind CSS", Icon: SiTailwindcss },
-      { name: "Next.js", Icon: SiNextdotjs },
     ],
   },
   {
@@ -104,7 +103,7 @@ export default function Tech() {
   return (
     <section
       id="tech"
-      className="min-h-screen flex flex-col justify-center py-24 bg-zinc-950 text-white relative border-t border-white/5 overflow-hidden"
+      className="min-h-screen flex flex-col justify-center py-24 bg-zinc-950 text-white relative overflow-hidden scroll-mt-20"
     >
       {/* Decorative background element for the active tab area */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-96 bg-zinc-900/20 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
@@ -117,13 +116,13 @@ export default function Tech() {
           transition={{ duration: 0.8 }}
           className="mb-16 flex flex-col items-center text-center"
         >
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+          <h2 className="text-4xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
             <span
               className={`transition-colors duration-300 ${activeTab === "frontend" || activeTab === "backend" ? "text-white" : "text-zinc-500"}`}
             >
               Habilidades
             </span>
-            <span className="text-zinc-500 mx-2">y</span>
+            <span className="text-zinc-500">y</span>
             <span
               className={`transition-colors duration-300 ${activeTab === "frameworks" || activeTab === "tools" ? "text-white" : "text-zinc-500"}`}
             >
@@ -182,7 +181,7 @@ export default function Tech() {
                 animate={{ opacity: 0.15, scale: 1 }}
                 exit={{ opacity: 0, scale: 1.2 }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="flex items-center justify-center will-change-transform will-change-opacity pointer-events-none"
+                className="flex items-center justify-center pointer-events-none"
               >
                 {(() => {
                   const Icon = activeCategory.icon;
@@ -222,10 +221,10 @@ export default function Tech() {
                     transition: { type: "spring", stiffness: 400, damping: 10 },
                   }}
                   whileTap={{ scale: 0.95 }}
-                  className="group flex items-center justify-center gap-3 p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.5)] hover:border-white/30 hover:bg-white/10 hover:shadow-[0_8px_32px_rgba(255,255,255,0.05)] transition-colors duration-200 cursor-default will-change-transform transform-gpu backface-hidden"
+                  className="group flex items-center justify-center gap-2 sm:gap-3 p-3 sm:p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.5)] hover:border-white/30 hover:bg-white/10 hover:shadow-[0_8px_32px_rgba(255,255,255,0.05)] transition-colors duration-200 cursor-default transform-gpu"
                 >
-                  <skill.Icon className="text-2xl text-zinc-300 group-hover:text-white transition-colors" />
-                  <span className="text-zinc-200 font-medium text-center tracking-wide drop-shadow-md">
+                  <skill.Icon className="text-xl sm:text-2xl text-zinc-300 group-hover:text-white transition-colors flex-shrink-0" />
+                  <span className="text-xs sm:text-base text-zinc-200 font-medium text-center tracking-wide drop-shadow-md">
                     {skill.name}
                   </span>
                 </motion.div>
