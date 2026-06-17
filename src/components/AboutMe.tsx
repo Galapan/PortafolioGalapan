@@ -1,7 +1,10 @@
 import { motion, type Variants } from "framer-motion";
 import { Code2, Target, Sparkles } from "lucide-react";
+import { useState } from "react";
 
 export default function AboutMe() {
+  const [imageError, setImageError] = useState(false);
+
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -89,25 +92,19 @@ export default function AboutMe() {
             <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent z-10"></div>
             {/* Using a sleek placeholder gradient/texture for now, could be replaced with a real aesthetic photo */}
             <div className="absolute inset-0 bg-zinc-900 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-50 mix-blend-overlay"></div>
-            <img
-              src="https://i.pinimg.com/736x/e6/a6/cc/e6a6ccf08c38edd428e13fe317f978af.jpg"
-              alt="Workspace setup"
-              loading="lazy"
-              decoding="async"
-              onError={(e) => {
-                const target = e.currentTarget;
-                target.style.display = "none";
-                const parent = target.parentElement;
-                if (parent) {
-                  parent.classList.add(
-                    "bg-gradient-to-br",
-                    "from-zinc-800",
-                    "to-zinc-900",
-                  );
-                }
-              }}
-              className="w-full h-full object-cover grayscale-0 md:grayscale md:group-hover:grayscale-0 transition-all duration-700 scale-100 md:group-hover:scale-105"
-            />
+            {!imageError && (
+              <img
+                src="https://i.pinimg.com/736x/e6/a6/cc/e6a6ccf08c38edd428e13fe317f978af.jpg"
+                alt="Workspace setup"
+                loading="lazy"
+                decoding="async"
+                onError={() => setImageError(true)}
+                className="w-full h-full object-cover grayscale-0 md:grayscale md:group-hover:grayscale-0 transition-all duration-700 scale-100 md:group-hover:scale-105"
+              />
+            )}
+            {imageError && (
+              <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-900" />
+            )}
 
             <div className="absolute bottom-8 left-8 right-8 z-20">
               <div className="flex items-center gap-3 text-white backdrop-blur-3xl bg-white/5 w-fit px-6 py-3 rounded-full border border-white/20 shadow-[0_12px_40px_0_rgba(0,0,0,0.6)]">

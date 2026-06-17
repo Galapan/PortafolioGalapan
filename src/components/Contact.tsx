@@ -63,7 +63,7 @@ export default function Contact() {
 
     setErrors({});
     setStatus("submitting");
-    formData.append("access_key", "577dba99-a48a-4dc9-ae34-22d7743d9008");
+    formData.append("access_key", import.meta.env.VITE_WEB3FORMS_KEY);
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {

@@ -161,7 +161,11 @@ export default function Tech() {
     techCategories.find((c) => c.id === activeTab) || techCategories[0];
 
   const maxSkills = Math.max(...techCategories.map((c) => c.skills.length));
-  const gridMinHeight = `${Math.ceil(maxSkills / 3) * 5.5 + Math.ceil(maxSkills / 3 - 1) * 1}rem`;
+  const rowsForColumns = (cols: number) => Math.ceil(maxSkills / cols);
+  const rowHeightRem = 5.5;
+  const rowGapRem = 1;
+  const mobileHeight = `${rowsForColumns(2) * rowHeightRem + Math.max(rowsForColumns(2) - 1, 0) * rowGapRem}rem`;
+  const desktopHeight = `${rowsForColumns(3) * rowHeightRem + Math.max(rowsForColumns(3) - 1, 0) * rowGapRem}rem`;
 
   return (
     <section
@@ -231,9 +235,11 @@ export default function Tech() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
+          data-tech-grid
           className="relative flex flex-col justify-center"
-          style={{ minHeight: gridMinHeight }}
+          style={{ minHeight: mobileHeight }}
         >
+          <style>{`@media (min-width: 768px) { [data-tech-grid] { min-height: ${desktopHeight} !important; } }`}</style>
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
             <motion.div
               key={activeTab}

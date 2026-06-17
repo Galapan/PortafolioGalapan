@@ -16,7 +16,7 @@ const projects = [
     title: "Landing page - Aetherys",
     description:
       "Landing page para un emprendimiento en el área de desarrollo de software, con un diseño moderno y atractivo.",
-    image: "/Aetherys2.png", // Placeholder
+    image: "/Aetherys2.webp",
     tags: ["HTML5", "TailwindCSS", "JS"],
     github: "https://github.com/Galapan/Portafolio",
     live: "https://portafolio-fawn-three-79.vercel.app/",
