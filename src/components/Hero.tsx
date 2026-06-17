@@ -199,26 +199,14 @@ export default function Hero() {
                 },
                 {
                   icon: Linkedin,
-                  href: "https://www.linkedin.com/in/bastian-alessandro-s%C3%A1nchez-gallegos-882985282/",
+                  href: "https://www.linkedin.com/in/bastian4le",
                   label: "LinkedIn",
                 },
-              ].map((social, index) => {
+              ].map((social) => {
                 const Icon = social.icon;
                 return (
                   <motion.a
                     key={social.label}
-                    initial={{ y: 0 }}
-                    whileInView={{
-                      y: [0, -6, 0],
-                      transition: {
-                        duration: 3,
-                        repeat: 2,
-                        repeatType: "loop",
-                        ease: "easeInOut",
-                        delay: index * 0.2,
-                      },
-                    }}
-                    viewport={{ once: true, amount: 0.3 }}
                     whileHover={{ scale: 1.15, y: -4 }}
                     whileTap={{ scale: 0.95 }}
                     href={social.href}

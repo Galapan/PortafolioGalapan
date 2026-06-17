@@ -20,7 +20,10 @@ export default function AboutMe() {
   };
 
   return (
-    <section id="about" className="min-h-screen flex flex-col justify-center py-24 bg-zinc-950 text-white relative scroll-mt-20">
+    <section
+      id="about"
+      className="min-h-screen flex flex-col justify-center py-24 bg-zinc-950 text-white relative scroll-mt-20"
+    >
       <div className="container mx-auto px-6 lg:px-12 max-w-5xl">
         <motion.div
           variants={containerVariants}

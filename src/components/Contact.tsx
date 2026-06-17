@@ -1,5 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, ArrowRight, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
+import {
+  Mail,
+  ArrowRight,
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
 import { useState } from "react";
 
 type FieldName = "name" | "email" | "message";
@@ -11,7 +17,10 @@ export default function Contact() {
   >("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
 
-  const validateField = (name: FieldName, value: string): string | undefined => {
+  const validateField = (
+    name: FieldName,
+    value: string,
+  ): string | undefined => {
     if (!value.trim()) {
       return "Este campo es obligatorio";
     }
@@ -27,7 +36,9 @@ export default function Contact() {
     return undefined;
   };
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const name = e.target.name as FieldName;
     const error = validateField(name, e.target.value);
     setErrors((prev) => ({ ...prev, [name]: error }));
@@ -137,7 +148,6 @@ export default function Contact() {
             className="bg-white/5 backdrop-blur-xl border border-white/10 p-5 md:p-8 rounded-3xl flex flex-col gap-2 md:gap-4 transform-gpu"
             onSubmit={handleSubmit}
           >
-
             <motion.div
               variants={itemVariants}
               className="flex flex-col gap-1 md:gap-2"
