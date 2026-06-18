@@ -70,12 +70,14 @@ export default function Contact() {
         method: "POST",
         body: formData,
       });
+      const data = await response.json();
 
-      if (response.ok) {
+      if (response.ok && data.success) {
         setStatus("success");
         form.reset();
         setTimeout(() => setStatus("idle"), 5000);
       } else {
+        console.error("Web3Forms error:", data.message);
         setStatus("error");
       }
     } catch (error) {
