@@ -12,6 +12,7 @@
 - No hay script de `typecheck` separado; usar `npx tsc -b` para verificar tipos.
 - No hay framework de testing configurado. No intentar correr tests.
 - No hay formateador (Prettier, etc.) configurado.
+- Tras cambios en código React, correr `npx -y react-doctor@latest .` (skill en `.agents/react-doctor/`) y corregir los errores que reporte.
 
 ## TypeScript — restricciones importantes
 
@@ -20,11 +21,15 @@
 - **`noUnusedLocals` / `noUnusedParameters`** — el build falla si hay variables o parámetros sin usar.
 - **`strict: true`** — modo estricto completo.
 
+## Entorno
+
+- El formulario de contacto usa Web3Forms y requiere `VITE_WEB3FORMS_KEY` definida en `.env` (`import.meta.env` en `src/components/Contact.tsx`). Sin ella el formulario no funciona.
+
 ## Tailwind CSS v4
 
 - Usa `@tailwindcss/vite` como plugin de Vite (no PostCSS).
 - Importación en CSS: `@import "tailwindcss"` (no `@tailwind base/components/utilities`).
-- No existe `tailwind.config.js`. La configuración se hace en CSS con `@theme`.
+- No existe `tailwind.config.js`. `src/index.css` solo define estilos base con `@layer base`; usar `@theme` en CSS solo si se agregan design tokens.
 - Utilidad `cn()` en `src/utils.ts` combina `clsx` + `tailwind-merge`.
 
 ## Arquitectura
@@ -36,3 +41,7 @@ SPA de una sola página (portafolio personal). Sin router.
 - **Estilos globales:** `src/index.css`
 - **Iconos:** `lucide-react` y `react-icons`
 - **Animaciones:** `framer-motion`
+
+## Convenciones de commits
+
+- Seguir Conventional Commits (según historial: `feat:`, `fix:`, `docs:`).
