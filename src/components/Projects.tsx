@@ -10,6 +10,7 @@ const projects = [
       "Plataforma integral diseñada para la Secretaría de Movilidad y Transporte (SMyT) destinada a la digitalización, control y auditoría de depósitos vehiculares.",
     image: "/SMyT.png", // Placeholder
     tags: ["Node.js", "Express", "PostgreSQL", "React"],
+    github: "https://github.com/Galapan/SMyT",
     live: "https://s-my-t.vercel.app/",
   },
   {
