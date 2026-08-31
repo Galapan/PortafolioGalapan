@@ -12,7 +12,6 @@ import {
   SiFirebase,
   SiSupabase,
   SiFramer,
-  SiRemix,
   SiElectron,
   SiPrettier,
   SiVercel,
@@ -29,10 +28,8 @@ import {
   FaGitAlt,
   FaGithub,
   FaFigma,
-  FaGoogle,
 } from "react-icons/fa";
 import { TbApi } from "react-icons/tb";
-import { GiBearFace } from "react-icons/gi";
 import { cn } from "../utils";
 import {
   enterOnScroll,
