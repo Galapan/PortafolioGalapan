@@ -1,5 +1,6 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
 import { ExternalLink, Github } from "lucide-react";
+import { enterOnScroll, useScope } from "../animations";
 
 const projects = [
   {
@@ -23,34 +24,33 @@ const projects = [
   },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6 },
-  },
-};
-
 export default function Projects() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useScope(sectionRef, () => {
+    const section = sectionRef.current;
+    if (!section) return;
+    enterOnScroll(section.querySelector("[data-anim-heading]"), {
+      offset: 50,
+      duration: 800,
+    });
+    enterOnScroll(section.querySelectorAll("[data-anim-item]"), {
+      scrollTarget: section.querySelector("[data-anim-grid]"),
+      staggerDelay: 100,
+      offset: 30,
+      duration: 600,
+    });
+  });
+
   return (
-    <section id="projects" className="min-h-screen flex flex-col justify-center py-24 bg-zinc-950 text-white relative scroll-mt-20">
+    <section
+      ref={sectionRef}
+      id="projects"
+      className="min-h-screen flex flex-col justify-center py-24 bg-zinc-950 text-white relative scroll-mt-20"
+    >
       <div className="container mx-auto px-6 lg:px-12 max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1 }}
-          transition={{ duration: 0.8 }}
+        <div
+          data-anim-heading
           className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6"
         >
           <div>
@@ -63,19 +63,16 @@ export default function Projects() {
             Una colección de los proyectos que he realizado, o en los que he
             participado.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
+        <div
+          data-anim-grid
           className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12"
         >
           {projects.map((project) => (
-            <motion.div
+            <div
               key={project.id}
-              variants={itemVariants}
+              data-anim-item
               className="group relative flex flex-col"
             >
               {/* Image Container */}
@@ -161,9 +158,9 @@ export default function Projects() {
                   )}
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

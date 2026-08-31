@@ -1,4 +1,5 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { useLayoutEffect, useRef, useState } from "react";
+import { animate } from "animejs";
 import {
   Mail,
   ArrowRight,
@@ -6,35 +7,96 @@ import {
   CheckCircle2,
   AlertCircle,
 } from "lucide-react";
-import { useState } from "react";
+import { enterOnScroll, prefersReducedMotion, useScope } from "../animations";
 
 type FieldName = "name" | "email" | "message";
 type FieldErrors = Partial<Record<FieldName, string>>;
+
+function validateField(name: FieldName, value: string): string | undefined {
+  if (!value.trim()) {
+    return "Este campo es obligatorio";
+  }
+  if (name === "email") {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value)) {
+      return "Email no válido";
+    }
+  }
+  if (name === "message" && value.trim().length < 10) {
+    return "Mínimo 10 caracteres";
+  }
+  return undefined;
+}
+
+function inputClass(hasError: boolean) {
+  return `bg-white/5 backdrop-blur-md border rounded-2xl px-4 py-2.5 md:px-5 md:py-3 text-white focus:outline-none focus:ring-2 transition-[background-color,border-color,box-shadow] text-sm md:text-base ${
+    hasError
+      ? "border-red-500/70 focus:ring-red-500/30 focus:border-red-500 focus:bg-red-500/5"
+      : "border-white/10 focus:ring-white/30 focus:border-white focus:bg-white/10"
+  }`;
+}
+
+function FieldError({ error }: { error?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const animation = error
+      ? animate(el, {
+          opacity: 1,
+          y: 0,
+          height: `${el.scrollHeight}px`,
+          duration: prefersReducedMotion() ? 0 : 250,
+          ease: "outQuad",
+        })
+      : animate(el, {
+          opacity: 0,
+          y: -4,
+          height: 0,
+          duration: prefersReducedMotion() ? 0 : 200,
+          ease: "outQuad",
+        });
+    return () => {
+      animation.revert();
+    };
+  }, [error]);
+
+  return (
+    <span
+      ref={ref}
+      className="flex h-0 overflow-hidden items-center gap-1 text-xs text-red-400 ml-2 opacity-0"
+      role={error ? "alert" : undefined}
+      aria-hidden={!error}
+    >
+      <AlertCircle size={12} /> {error}
+    </span>
+  );
+}
 
 export default function Contact() {
   const [status, setStatus] = useState<
     "idle" | "submitting" | "success" | "error"
   >("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
+  const submittingRef = useRef(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
-  const validateField = (
-    name: FieldName,
-    value: string,
-  ): string | undefined => {
-    if (!value.trim()) {
-      return "Este campo es obligatorio";
-    }
-    if (name === "email") {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(value)) {
-        return "Email no válido";
-      }
-    }
-    if (name === "message" && value.trim().length < 10) {
-      return "Mínimo 10 caracteres";
-    }
-    return undefined;
-  };
+  useScope(sectionRef, () => {
+    const section = sectionRef.current;
+    if (!section) return;
+    enterOnScroll(section.querySelector("[data-anim-panel]"), {
+      axis: "x",
+      offset: -50,
+      duration: 500,
+    });
+    enterOnScroll(section.querySelectorAll("[data-anim-item]"), {
+      scrollTarget: section.querySelector("[data-anim-form]"),
+      staggerDelay: 50,
+      offset: 20,
+      duration: 400,
+    });
+  });
 
   const handleBlur = (
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -46,6 +108,13 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (
+      submittingRef.current ||
+      status === "submitting" ||
+      status === "success"
+    ) {
+      return;
+    }
     const form = e.currentTarget;
     const formData = new FormData(form);
 
@@ -62,6 +131,7 @@ export default function Contact() {
     }
 
     setErrors({});
+    submittingRef.current = true;
     setStatus("submitting");
     formData.append("access_key", import.meta.env.VITE_WEB3FORMS_KEY);
 
@@ -83,37 +153,21 @@ export default function Contact() {
     } catch (error) {
       console.error(error);
       setStatus("error");
+    } finally {
+      submittingRef.current = false;
     }
   };
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.05 } },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
-  };
-
-  const inputClass = (hasError: boolean) =>
-    `bg-white/5 backdrop-blur-md border rounded-2xl px-4 py-2.5 md:px-5 md:py-3 text-white focus:outline-none focus:ring-2 transition-all text-sm md:text-base ${
-      hasError
-        ? "border-red-500/70 focus:ring-red-500/30 focus:border-red-500 focus:bg-red-500/5"
-        : "border-white/10 focus:ring-white/30 focus:border-white focus:bg-white/10"
-    }`;
 
   return (
     <section
+      ref={sectionRef}
       id="contact"
       className="min-h-screen flex flex-col justify-center py-16 md:py-24 bg-zinc-950 text-white relative scroll-mt-20"
     >
       <div className="container mx-auto px-6 lg:px-12 max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.5 }}
+          <div
+            data-anim-panel
             className="flex flex-col h-full justify-center transform-gpu"
           >
             <div>
@@ -139,21 +193,15 @@ export default function Contact() {
                 </span>
               </a>
             </div>
-          </motion.div>
+          </div>
 
           {/* Minimal Contact Form */}
-          <motion.form
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
+          <form
+            data-anim-form
             className="bg-white/5 backdrop-blur-xl border border-white/10 p-5 md:p-8 rounded-3xl flex flex-col gap-2 md:gap-4 transform-gpu"
             onSubmit={handleSubmit}
           >
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-col gap-1 md:gap-2"
-            >
+            <div data-anim-item className="flex flex-col gap-1 md:gap-2">
               <label
                 htmlFor="name"
                 className="text-xs md:text-sm font-medium text-zinc-400 ml-2"
@@ -170,25 +218,10 @@ export default function Contact() {
                 className={inputClass(!!errors.name)}
                 placeholder="Nombre..."
               />
-              <AnimatePresence>
-                {errors.name && (
-                  <motion.span
-                    initial={{ opacity: 0, y: -4, height: 0 }}
-                    animate={{ opacity: 1, y: 0, height: "auto" }}
-                    exit={{ opacity: 0, y: -4, height: 0 }}
-                    className="text-xs text-red-400 ml-2 flex items-center gap-1"
-                    role="alert"
-                  >
-                    <AlertCircle size={12} /> {errors.name}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </motion.div>
+              <FieldError error={errors.name} />
+            </div>
 
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-col gap-1 md:gap-2"
-            >
+            <div data-anim-item className="flex flex-col gap-1 md:gap-2">
               <label
                 htmlFor="email"
                 className="text-xs md:text-sm font-medium text-zinc-400 ml-2"
@@ -205,25 +238,10 @@ export default function Contact() {
                 className={inputClass(!!errors.email)}
                 placeholder="correo@ejemplo.com"
               />
-              <AnimatePresence>
-                {errors.email && (
-                  <motion.span
-                    initial={{ opacity: 0, y: -4, height: 0 }}
-                    animate={{ opacity: 1, y: 0, height: "auto" }}
-                    exit={{ opacity: 0, y: -4, height: 0 }}
-                    className="text-xs text-red-400 ml-2 flex items-center gap-1"
-                    role="alert"
-                  >
-                    <AlertCircle size={12} /> {errors.email}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </motion.div>
+              <FieldError error={errors.email} />
+            </div>
 
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-col gap-1 md:gap-2 grow"
-            >
+            <div data-anim-item className="flex flex-col gap-1 md:gap-2 grow">
               <label
                 htmlFor="message"
                 className="text-xs md:text-sm font-medium text-zinc-400 ml-2"
@@ -242,27 +260,14 @@ export default function Contact() {
                 className={`${inputClass(!!errors.message)} resize-none`}
                 placeholder="Hola..."
               ></textarea>
-              <AnimatePresence>
-                {errors.message && (
-                  <motion.span
-                    initial={{ opacity: 0, y: -4, height: 0 }}
-                    animate={{ opacity: 1, y: 0, height: "auto" }}
-                    exit={{ opacity: 0, y: -4, height: 0 }}
-                    className="text-xs text-red-400 ml-2 flex items-center gap-1"
-                    role="alert"
-                  >
-                    <AlertCircle size={12} /> {errors.message}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </motion.div>
+              <FieldError error={errors.message} />
+            </div>
 
-            <motion.button
-              variants={itemVariants}
-              whileTap={status !== "submitting" ? { scale: 0.98 } : undefined}
+            <button
+              data-anim-item
               type="submit"
               disabled={status === "submitting" || status === "success"}
-              className="mt-2 md:mt-4 w-full group py-3 md:py-4 px-6 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-white/20 hover:border-white/40 shadow-[0_4px_24px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_32px_rgba(255,255,255,0.05)] transition-all disabled:opacity-70 disabled:cursor-not-allowed text-sm md:text-base"
+            className="mt-2 md:mt-4 w-full group py-3 md:py-4 px-6 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-white/20 hover:border-white/40 active:scale-[0.98] shadow-[0_4px_24px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_32px_rgba(255,255,255,0.05)] transition-[background-color,border-color,box-shadow,opacity,transform] disabled:opacity-70 disabled:cursor-not-allowed text-sm md:text-base"
             >
               {status === "submitting" ? (
                 <>
@@ -285,8 +290,8 @@ export default function Contact() {
                   />
                 </>
               )}
-            </motion.button>
-          </motion.form>
+            </button>
+          </form>
         </div>
       </div>
     </section>

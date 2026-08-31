@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion, AnimatePresence, type Variants } from "framer-motion";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { animate, stagger, utils } from "animejs";
 import { Monitor, Server, Layers, Wrench } from "lucide-react";
 import {
   SiTypescript,
@@ -34,8 +34,13 @@ import {
 import { TbApi } from "react-icons/tb";
 import { GiBearFace } from "react-icons/gi";
 import { cn } from "../utils";
-
-const EASE = [0.25, 0.1, 0.25, 1] as const;
+import {
+  enterOnScroll,
+  hoverPop,
+  prefersReducedMotion,
+  scrub,
+  useScope,
+} from "../animations";
 
 const techCategories = [
   {
@@ -73,8 +78,6 @@ const techCategories = [
     skills: [
       { name: "Next.js", Icon: SiNextdotjs },
       { name: "Framer Motion", Icon: SiFramer },
-      { name: "Remix", Icon: SiRemix },
-      { name: "Zustand", Icon: GiBearFace },
       { name: "React native", Icon: FaReact },
       { name: "Bootstrap", Icon: FaBootstrap },
       { name: "Electron", Icon: SiElectron },
@@ -88,7 +91,6 @@ const techCategories = [
       { name: "Git", Icon: FaGitAlt },
       { name: "GitHub", Icon: FaGithub },
       { name: "Figma", Icon: FaFigma },
-      { name: "Antigravity", Icon: FaGoogle },
       { name: "VS Code", Icon: VscVscode },
       { name: "Prettier", Icon: SiPrettier },
       { name: "Vercel", Icon: SiVercel },
@@ -97,68 +99,20 @@ const techCategories = [
   },
 ];
 
-const headingVariants: Variants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: EASE } },
-};
-
-const tabsContainerVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: EASE, delay: 0.1 },
-  },
-};
-
-const gridContainerVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.4,
-      ease: EASE,
-      delay: 0.05,
-      staggerChildren: 0.03,
-      delayChildren: 0.02,
-    },
-  },
-  exit: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      staggerChildren: 0.02,
-      staggerDirection: -1,
-    },
-  },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.9 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.25, ease: EASE },
-  },
-  exit: {
-    opacity: 0,
-    scale: 0.95,
-    transition: { duration: 0.15, ease: EASE },
-  },
-};
-
-const cardHoverTransition = {
-  type: "spring",
-  stiffness: 300,
-  damping: 20,
-} as const;
-
 export default function Tech() {
   const [activeTab, setActiveTab] = useState(techCategories[0].id);
+  const [displayedTab, setDisplayedTab] = useState(techCategories[0].id);
+  const sectionRef = useRef<HTMLElement>(null);
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const pillRef = useRef<HTMLSpanElement>(null);
+  const watermarkRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const pillPositioned = useRef(false);
+  const switching = useRef(false);
+  const prevTabRef = useRef(techCategories[0].id);
 
-  const activeCategory =
-    techCategories.find((c) => c.id === activeTab) || techCategories[0];
+  const displayedCategory =
+    techCategories.find((c) => c.id === displayedTab) || techCategories[0];
 
   const maxSkills = Math.max(...techCategories.map((c) => c.skills.length));
   const rowsForColumns = (cols: number) => Math.ceil(maxSkills / cols);
@@ -167,19 +121,170 @@ export default function Tech() {
   const mobileHeight = `${rowsForColumns(2) * rowHeightRem + Math.max(rowsForColumns(2) - 1, 0) * rowGapRem}rem`;
   const desktopHeight = `${rowsForColumns(3) * rowHeightRem + Math.max(rowsForColumns(3) - 1, 0) * rowGapRem}rem`;
 
+  useScope(sectionRef, () => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    enterOnScroll(section.querySelector("[data-anim-heading]"), {
+      offset: 50,
+      duration: 800,
+    });
+    enterOnScroll(section.querySelector("[data-anim-tabs]"), {
+      offset: 30,
+      duration: 600,
+      delay: 100,
+    });
+    enterOnScroll(section.querySelector("[data-anim-grid]"), {
+      offset: 30,
+      duration: 400,
+    });
+
+    const grid = section.querySelector("[data-anim-grid]");
+    if (grid) {
+      enterOnScroll(section.querySelectorAll("[data-card]"), {
+        scrollTarget: grid,
+        staggerDelay: 40,
+        offset: 24,
+        duration: 500,
+      });
+    }
+
+    const watermarkScroll = section.querySelector(
+      "[data-tech-watermark-scroll]",
+    );
+    if (watermarkScroll) {
+      scrub(
+        watermarkScroll,
+        {
+          y: [-24, 24],
+        },
+        { scrollTarget: section, sync: true },
+      );
+    }
+
+    const glow = section.querySelector("[data-tech-glow]");
+    if (glow) {
+      scrub(glow, { y: [-56, 56] }, { scrollTarget: section, sync: true });
+    }
+  });
+
+  useLayoutEffect(() => {
+    const positionPill = (animateIt: boolean) => {
+      const tabsEl = tabsRef.current;
+      const pillEl = pillRef.current;
+      if (!tabsEl || !pillEl) return;
+      const btn = tabsEl.querySelector<HTMLElement>(
+        `[data-tab="${activeTab}"]`,
+      );
+      if (!btn) return;
+      const pos = {
+        left: btn.offsetLeft,
+        top: btn.offsetTop,
+        width: btn.offsetWidth,
+        height: btn.offsetHeight,
+      };
+      if (animateIt && !prefersReducedMotion()) {
+        animate(pillEl, { ...pos, duration: 300, ease: "outExpo" });
+      } else {
+        utils.set(pillEl, { ...pos, opacity: 1 });
+      }
+    };
+
+    positionPill(pillPositioned.current);
+    pillPositioned.current = true;
+    const onResize = () => positionPill(false);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [activeTab]);
+
+  useEffect(() => {
+    const wm = watermarkRef.current;
+    if (!wm) return;
+    if (prefersReducedMotion()) {
+      utils.set(wm, { opacity: 0.08, scale: 1, rotate: 0 });
+      return;
+    }
+    animate(wm, {
+      opacity: [0, 0.08],
+      scale: [0.72, 1],
+      rotate: [-14, 0],
+      duration: 500,
+      ease: "outExpo",
+    });
+  }, [displayedCategory.icon]);
+
+  useEffect(() => {
+    const grid = gridRef.current;
+    const cards = grid?.querySelectorAll("[data-card]");
+    if (!grid || !cards || cards.length === 0) return;
+    const cardCleanup = hoverPop(cards, {
+      scale: 1.03,
+      y: -4,
+    });
+
+    const isInitialRender = prevTabRef.current === displayedTab;
+    prevTabRef.current = displayedTab;
+    if (isInitialRender) return cardCleanup;
+
+    utils.set(cards, { opacity: 0, scale: 0.95, y: 12 });
+    animate(cards, {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      duration: prefersReducedMotion() ? 0 : 350,
+      ease: "outExpo",
+      delay: prefersReducedMotion() ? 0 : stagger(24),
+    });
+    return cardCleanup;
+  }, [displayedTab]);
+
+  useEffect(() => {
+    const grid = gridRef.current;
+    const icons = grid?.querySelectorAll("[data-card-icon]");
+    if (!icons || icons.length === 0) return;
+    return hoverPop(icons, { scale: 1.15 });
+  }, [displayedTab]);
+
+  const handleTabChange = (id: string) => {
+    if (id === activeTab || switching.current) return;
+    switching.current = true;
+    setActiveTab(id);
+    const grid = gridRef.current;
+    const cards = grid?.querySelectorAll("[data-card]");
+    if (!grid || !cards || cards.length === 0) {
+      setDisplayedTab(id);
+      switching.current = false;
+      return;
+    }
+    animate(cards, {
+      opacity: 0,
+      scale: 0.95,
+      duration: prefersReducedMotion() ? 0 : 150,
+      ease: "inQuad",
+      delay: stagger(15, { from: "last" }),
+      onComplete: () => {
+        setDisplayedTab(id);
+        switching.current = false;
+      },
+    });
+  };
+
   return (
     <section
+      ref={sectionRef}
       id="tech"
       className="min-h-screen flex flex-col justify-center py-24 bg-zinc-950 text-white relative overflow-hidden scroll-mt-20"
     >
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-96 bg-zinc-900/20 rounded-full blur-[100px] -z-10 pointer-events-none" />
+      <div className="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none">
+        <div
+          data-tech-glow
+          className="w-full max-w-4xl h-96 bg-zinc-900/20 rounded-full blur-[100px] transform-gpu"
+        />
+      </div>
 
       <div className="container mx-auto px-6 lg:px-12 max-w-5xl">
-        <motion.div
-          variants={headingVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
+        <div
+          data-anim-heading
           className="mb-16 flex flex-col items-center text-center"
         >
           <h2 className="text-4xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
@@ -187,15 +292,17 @@ export default function Tech() {
             <span className="text-zinc-500">y Tecnologías.</span>
           </h2>
           <div className="w-20 h-1 bg-white rounded-full" />
-        </motion.div>
+        </div>
 
-        <motion.div
-          variants={tabsContainerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-          className="flex flex-wrap justify-center gap-3 mb-8"
+        <div
+          ref={tabsRef}
+          data-anim-tabs
+          className="relative flex flex-wrap justify-center gap-3 mb-8"
         >
+          <span
+            ref={pillRef}
+            className="absolute left-0 top-0 rounded-full bg-white shadow-[0_0_20px_rgba(255,255,255,0.15)] opacity-0 pointer-events-none"
+          />
           {techCategories.map((category) => {
             const Icon = category.icon;
             const isActive = activeTab === category.id;
@@ -203,7 +310,8 @@ export default function Tech() {
             return (
               <button
                 key={category.id}
-                onClick={() => setActiveTab(category.id)}
+                data-tab={category.id}
+                onClick={() => handleTabChange(category.id)}
                 className={cn(
                   "relative flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-colors duration-300 border cursor-pointer",
                   isActive
@@ -211,13 +319,6 @@ export default function Tech() {
                     : "border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800",
                 )}
               >
-                {isActive && (
-                  <motion.span
-                    layoutId="tab-pill"
-                    className="absolute inset-0 rounded-full bg-white shadow-[0_0_20px_rgba(255,255,255,0.15)]"
-                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                  />
-                )}
                 <span className="relative z-10 flex items-center gap-2">
                   <Icon
                     size={16}
@@ -228,28 +329,25 @@ export default function Tech() {
               </button>
             );
           })}
-        </motion.div>
+        </div>
 
-        <motion.div
-          variants={gridContainerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-          data-tech-grid
-          className="relative flex flex-col justify-center"
+        <div
+          ref={gridRef}
+          data-anim-grid
+          className="relative flex flex-col justify-start"
           style={{ minHeight: mobileHeight }}
         >
-          <style>{`@media (min-width: 768px) { [data-tech-grid] { min-height: ${desktopHeight} !important; } }`}</style>
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, scale: 0.85, rotate: -10 }}
-              animate={{ opacity: 0.08, scale: 1, rotate: 0 }}
-              transition={{ type: "spring", stiffness: 200, damping: 20 }}
-              className="flex items-center justify-center"
+          <style>{`@media (min-width: 768px) { [data-anim-grid] { min-height: ${desktopHeight} !important; } }`}</style>
+          <div
+            data-tech-watermark-scroll
+            className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 transform-gpu"
+          >
+            <div
+              ref={watermarkRef}
+              className="flex items-center justify-center opacity-0"
             >
               {(() => {
-                const Icon = activeCategory.icon;
+                const Icon = displayedCategory.icon;
                 return (
                   <Icon
                     className="w-48 h-48 md:w-64 md:h-64 text-white"
@@ -257,46 +355,26 @@ export default function Tech() {
                   />
                 );
               })()}
-            </motion.div>
+            </div>
           </div>
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              variants={gridContainerVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              className="relative z-10 w-full grid grid-cols-2 md:grid-cols-3 gap-4"
-            >
-              {activeCategory.skills.map((skill) => (
-                <motion.div
-                  key={skill.name}
-                  variants={itemVariants}
-                  whileHover={{
-                    y: -4,
-                    scale: 1.03,
-                    boxShadow: "0 0 30px rgba(255,255,255,0.1)",
-                    transition: cardHoverTransition,
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                  className="group flex items-center justify-center gap-2 sm:gap-3 p-3 sm:p-6 bg-zinc-900/80 border border-zinc-800 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.5)] hover:border-zinc-600 hover:bg-zinc-800/90 transition-colors duration-200 cursor-default"
-                >
-                  <motion.span
-                    className="flex-shrink-0"
-                    whileHover={{ scale: 1.15 }}
-                    transition={cardHoverTransition}
-                  >
-                    <skill.Icon className="text-xl sm:text-2xl text-zinc-300 group-hover:text-white transition-colors" />
-                  </motion.span>
-                  <span className="text-xs sm:text-base text-zinc-200 font-medium text-center tracking-wide drop-shadow-md">
-                    {skill.name}
-                  </span>
-                </motion.div>
-              ))}
-            </motion.div>
-          </AnimatePresence>
-        </motion.div>
+          <div className="relative z-10 w-full grid grid-cols-2 md:grid-cols-3 gap-4">
+            {displayedCategory.skills.map((skill) => (
+              <div
+                key={skill.name}
+                data-card
+                className="group flex items-center justify-center gap-2 sm:gap-3 p-3 sm:p-6 bg-zinc-900/80 border border-zinc-800 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.5)] hover:border-zinc-600 hover:bg-zinc-800/90 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-[color,background-color,border-color,box-shadow] duration-200 cursor-default"
+              >
+                <span className="flex-shrink-0" data-card-icon>
+                  <skill.Icon className="text-xl sm:text-2xl text-zinc-300 group-hover:text-white transition-colors" />
+                </span>
+                <span className="text-xs sm:text-base text-zinc-200 font-medium text-center tracking-wide drop-shadow-md">
+                  {skill.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

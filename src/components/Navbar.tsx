@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { animate, stagger } from "animejs";
 import { Menu, X } from "lucide-react";
 import { cn } from "../utils";
 import { useScrollState } from "../hooks/useScrollState";
+import { prefersReducedMotion } from "../animations";
 
 const navLinks = [
   { name: "Home", href: "#home" },
@@ -13,7 +14,20 @@ const navLinks = [
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [menuRendered, setMenuRendered] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   const { isScrolled, activeSection } = useScrollState();
+
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
+  const toggleMobileMenu = () => {
+    if (isMobileMenuOpen) {
+      setIsMobileMenuOpen(false);
+    } else {
+      setIsMobileMenuOpen(true);
+      setMenuRendered(true);
+    }
+  };
 
   const handleScrollToSection = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -21,7 +35,7 @@ export default function Navbar() {
   ) => {
     e.preventDefault();
     const targetId = href.replace("#", "");
-    
+
     if (targetId === "contact") {
       window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
     } else {
@@ -30,7 +44,7 @@ export default function Navbar() {
         elem.scrollIntoView({ behavior: "smooth" });
       }
     }
-    setIsMobileMenuOpen(false);
+    closeMobileMenu();
   };
 
   useEffect(() => {
@@ -47,116 +61,140 @@ export default function Navbar() {
   useEffect(() => {
     if (!isMobileMenuOpen) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsMobileMenuOpen(false);
+      if (e.key === "Escape") closeMobileMenu();
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [isMobileMenuOpen]);
 
-  return (
-    <nav
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        isScrolled
-          ? "py-4 bg-zinc-950/60 backdrop-blur-2xl"
-          : "py-6 bg-transparent",
-      )}
-    >
-      <div className="container mx-auto px-6 lg:px-12 flex justify-between items-center max-w-7xl">
-        <a
-          href="#home"
-          onClick={(e) => handleScrollToSection(e, "#home")}
-          className="text-2xl font-bold tracking-tighter text-white z-50 flex items-center gap-2"
-        >
-          <span>
-            BASTIAN<span className="text-zinc-500">.</span>
-          </span>
-        </a>
+  useEffect(() => {
+    const menu = menuRef.current;
+    if (!menuRendered || !menu) return;
+    const duration = prefersReducedMotion() ? 0 : 300;
+    if (isMobileMenuOpen) {
+      animate(menu, {
+        opacity: [0, 1],
+        y: [-20, 0],
+        duration,
+        ease: "inOutQuad",
+      });
+      animate(menu.querySelectorAll("[data-menu-link]"), {
+        opacity: [0, 1],
+        y: [20, 0],
+        duration,
+        ease: "outQuad",
+        delay: stagger(100),
+      });
+    } else {
+      animate(menu, {
+        opacity: 0,
+        y: -20,
+        duration,
+        ease: "inOutQuad",
+        onComplete: () => setMenuRendered(false),
+      });
+    }
+  }, [isMobileMenuOpen, menuRendered]);
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-8">
+  return (
+    <>
+      <nav
+        className={cn(
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+          isScrolled
+            ? "py-4 bg-zinc-950/60 backdrop-blur-2xl"
+            : "py-6 bg-transparent",
+        )}
+      >
+        <div className="container mx-auto px-6 lg:px-12 flex justify-between items-center max-w-7xl">
+          <a
+            href="#home"
+            onClick={(e) => handleScrollToSection(e, "#home")}
+            className="text-2xl font-bold tracking-tighter text-white z-50 flex items-center gap-2"
+          >
+            <span>
+              BASTIAN<span className="text-zinc-500">.</span>
+            </span>
+          </a>
+
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.href.replace("#", "");
+              return (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={(e) => handleScrollToSection(e, link.href)}
+                  className={cn(
+                    "text-sm font-medium transition-colors relative group",
+                    isActive ? "text-white" : "text-zinc-300 hover:text-white",
+                  )}
+                >
+                  {link.name}
+                  <span
+                    className={cn(
+                      "absolute -bottom-1 left-0 h-0.5 bg-white transition-all duration-300",
+                      isActive ? "w-full" : "w-0 group-hover:w-full",
+                    )}
+                  ></span>
+                </a>
+              );
+            })}
+            <a
+              href="#contact"
+              onClick={(e) => handleScrollToSection(e, "#contact")}
+              className="px-5 py-2.5 text-sm font-medium text-black bg-white rounded-full hover:bg-zinc-200 transition-colors"
+            >
+              Hablemos
+            </a>
+          </div>
+
+          {/* Mobile Nav Toggle */}
+          <button
+            className="md:hidden text-zinc-300 hover:text-white z-50"
+            onClick={toggleMobileMenu}
+            aria-expanded={isMobileMenuOpen}
+            aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Nav Menu */}
+      {menuRendered && (
+        <div
+          ref={menuRef}
+          className="fixed inset-0 z-40 bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 opacity-0"
+        >
           {navLinks.map((link) => {
             const isActive = activeSection === link.href.replace("#", "");
             return (
               <a
                 key={link.name}
                 href={link.href}
+                data-menu-link
                 onClick={(e) => handleScrollToSection(e, link.href)}
                 className={cn(
-                  "text-sm font-medium transition-colors relative group",
+                  "text-3xl font-bold transition-colors opacity-0",
                   isActive ? "text-white" : "text-zinc-300 hover:text-white",
                 )}
               >
                 {link.name}
-                <span
-                  className={cn(
-                    "absolute -bottom-1 left-0 h-0.5 bg-white transition-all duration-300",
-                    isActive ? "w-full" : "w-0 group-hover:w-full",
-                  )}
-                ></span>
               </a>
             );
           })}
           <a
+            data-menu-link
             href="#contact"
             onClick={(e) => handleScrollToSection(e, "#contact")}
-            className="px-5 py-2.5 text-sm font-medium text-black bg-white rounded-full hover:bg-zinc-200 transition-colors"
+            className="mt-4 px-8 py-3 text-lg font-medium text-black bg-white rounded-full hover:bg-zinc-200 transition-colors opacity-0"
           >
             Hablemos
           </a>
         </div>
-
-        {/* Mobile Nav Toggle */}
-        <button
-          className="md:hidden text-zinc-300 hover:text-white z-50"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-
-        {/* Mobile Nav Menu */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="absolute top-0 left-0 w-full h-screen bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8"
-            >
-              {navLinks.map((link, i) => {
-                const isActive = activeSection === link.href.replace("#", "");
-                return (
-                  <motion.a
-                    key={link.name}
-                    href={link.href}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 * i }}
-                    onClick={(e) => handleScrollToSection(e, link.href)}
-                    className={cn(
-                      "text-3xl font-bold transition-colors",
-                      isActive ? "text-white" : "text-zinc-300 hover:text-white",
-                    )}
-                  >
-                    {link.name}
-                  </motion.a>
-                );
-              })}
-              <motion.a
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                href="#contact"
-                onClick={(e) => handleScrollToSection(e, "#contact")}
-                className="mt-4 px-8 py-3 text-lg font-medium text-black bg-white rounded-full hover:bg-zinc-200 transition-colors"
-              >
-                Hablemos
-              </motion.a>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </nav>
+      )}
+    </>
   );
 }
