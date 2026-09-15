@@ -1,6 +1,6 @@
-import { useRef } from "react";
+import { m as motion, useReducedMotion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
-import { enterOnScroll, useScope } from "../animations";
+import { reveal, revealViewport, sequence } from "../animations";
 
 const projects = [
   {
@@ -26,32 +26,17 @@ const projects = [
 ];
 
 export default function Projects() {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useScope(sectionRef, () => {
-    const section = sectionRef.current;
-    if (!section) return;
-    enterOnScroll(section.querySelector("[data-anim-heading]"), {
-      offset: 50,
-      duration: 800,
-    });
-    enterOnScroll(section.querySelectorAll("[data-anim-item]"), {
-      scrollTarget: section.querySelector("[data-anim-grid]"),
-      staggerDelay: 100,
-      offset: 30,
-      duration: 600,
-    });
-  });
+  const reduced = !!useReducedMotion();
 
   return (
     <section
-      ref={sectionRef}
       id="projects"
       className="min-h-screen flex flex-col justify-center py-24 bg-zinc-950 text-white relative scroll-mt-20"
     >
       <div className="container mx-auto px-6 lg:px-12 max-w-7xl">
-        <div
-          data-anim-heading
+        <motion.div
+          initial="hidden" whileInView="visible" viewport={revealViewport}
+          variants={reveal(50, 0.8, "y", reduced)}
           className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6"
         >
           <div>
@@ -64,16 +49,17 @@ export default function Projects() {
             Una colección de los proyectos que he realizado, o en los que he
             participado.
           </p>
-        </div>
+        </motion.div>
 
-        <div
-          data-anim-grid
+        <motion.div
+          initial="hidden" whileInView="visible" viewport={revealViewport}
+          variants={sequence(0.1, 0, reduced)}
           className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12"
         >
           {projects.map((project) => (
-            <div
+            <motion.div
               key={project.id}
-              data-anim-item
+              variants={reveal(30, 0.6, "y", reduced)}
               className="group relative flex flex-col"
             >
               {/* Image Container */}
@@ -159,9 +145,9 @@ export default function Projects() {
                   )}
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

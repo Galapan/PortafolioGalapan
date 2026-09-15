@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "react";
-import { animate } from "animejs";
+import { useRef, useState } from "react";
+import { AnimatePresence, m as motion, useReducedMotion } from "framer-motion";
 import {
   Mail,
   ArrowRight,
@@ -7,7 +7,7 @@ import {
   CheckCircle2,
   AlertCircle,
 } from "lucide-react";
-import { enterOnScroll, prefersReducedMotion, useScope } from "../animations";
+import { reveal, revealViewport, sequence } from "../animations";
 
 type FieldName = "name" | "email" | "message";
 type FieldErrors = Partial<Record<FieldName, string>>;
@@ -37,40 +37,22 @@ function inputClass(hasError: boolean) {
 }
 
 function FieldError({ error }: { error?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const animation = error
-      ? animate(el, {
-          opacity: 1,
-          y: 0,
-          height: `${el.scrollHeight}px`,
-          duration: prefersReducedMotion() ? 0 : 250,
-          ease: "outQuad",
-        })
-      : animate(el, {
-          opacity: 0,
-          y: -4,
-          height: 0,
-          duration: prefersReducedMotion() ? 0 : 200,
-          ease: "outQuad",
-        });
-    return () => {
-      animation.revert();
-    };
-  }, [error]);
+  const reduced = useReducedMotion();
 
   return (
-    <span
-      ref={ref}
-      className="flex h-0 overflow-hidden items-center gap-1 text-xs text-red-400 ml-2 opacity-0"
-      role={error ? "alert" : undefined}
-      aria-hidden={!error}
+    <AnimatePresence initial={false}>
+    {error && <motion.span
+      layout="position"
+      initial={{ opacity: 0, y: reduced ? 0 : -4 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: reduced ? 0 : -4 }}
+      transition={{ duration: reduced ? 0 : 0.25, ease: "easeOut" }}
+      className="flex overflow-hidden items-center gap-1 text-xs text-red-400 ml-2"
+      role="alert"
     >
       <AlertCircle size={12} /> {error}
-    </span>
+    </motion.span>}
+    </AnimatePresence>
   );
 }
 
@@ -80,23 +62,8 @@ export default function Contact() {
   >("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
   const submittingRef = useRef(false);
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useScope(sectionRef, () => {
-    const section = sectionRef.current;
-    if (!section) return;
-    enterOnScroll(section.querySelector("[data-anim-panel]"), {
-      axis: "x",
-      offset: -50,
-      duration: 500,
-    });
-    enterOnScroll(section.querySelectorAll("[data-anim-item]"), {
-      scrollTarget: section.querySelector("[data-anim-form]"),
-      staggerDelay: 50,
-      offset: 20,
-      duration: 400,
-    });
-  });
+  const reduced = !!useReducedMotion();
+  const item = reveal(20, 0.4, "y", reduced);
 
   const handleBlur = (
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -160,14 +127,14 @@ export default function Contact() {
 
   return (
     <section
-      ref={sectionRef}
       id="contact"
       className="min-h-screen flex flex-col justify-center py-16 md:py-24 bg-zinc-950 text-white relative scroll-mt-20"
     >
       <div className="container mx-auto px-6 lg:px-12 max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          <div
-            data-anim-panel
+          <motion.div
+            initial="hidden" whileInView="visible" viewport={revealViewport}
+            variants={reveal(-50, 0.5, "x", reduced)}
             className="flex flex-col h-full justify-center transform-gpu"
           >
             <div>
@@ -193,15 +160,17 @@ export default function Contact() {
                 </span>
               </a>
             </div>
-          </div>
+          </motion.div>
 
           {/* Minimal Contact Form */}
-          <form
-            data-anim-form
+          <motion.form
+            layout
+            initial="hidden" whileInView="visible" viewport={revealViewport}
+            variants={sequence(0.05, 0, reduced)}
             className="bg-white/5 backdrop-blur-xl border border-white/10 p-5 md:p-8 rounded-3xl flex flex-col gap-2 md:gap-4 transform-gpu"
             onSubmit={handleSubmit}
           >
-            <div data-anim-item className="flex flex-col gap-1 md:gap-2">
+            <motion.div layout="position" variants={item} className="flex flex-col gap-1 md:gap-2">
               <label
                 htmlFor="name"
                 className="text-xs md:text-sm font-medium text-zinc-400 ml-2"
@@ -219,9 +188,9 @@ export default function Contact() {
                 placeholder="Nombre..."
               />
               <FieldError error={errors.name} />
-            </div>
+            </motion.div>
 
-            <div data-anim-item className="flex flex-col gap-1 md:gap-2">
+            <motion.div layout="position" variants={item} className="flex flex-col gap-1 md:gap-2">
               <label
                 htmlFor="email"
                 className="text-xs md:text-sm font-medium text-zinc-400 ml-2"
@@ -239,9 +208,9 @@ export default function Contact() {
                 placeholder="correo@ejemplo.com"
               />
               <FieldError error={errors.email} />
-            </div>
+            </motion.div>
 
-            <div data-anim-item className="flex flex-col gap-1 md:gap-2 grow">
+            <motion.div layout="position" variants={item} className="flex flex-col gap-1 md:gap-2 grow">
               <label
                 htmlFor="message"
                 className="text-xs md:text-sm font-medium text-zinc-400 ml-2"
@@ -261,13 +230,15 @@ export default function Contact() {
                 placeholder="Hola..."
               ></textarea>
               <FieldError error={errors.message} />
-            </div>
+            </motion.div>
 
-            <button
-              data-anim-item
+            <motion.button
+              layout="position"
+              variants={item}
+              whileTap={reduced || status === "submitting" || status === "success" ? undefined : { scale: 0.98 }}
               type="submit"
               disabled={status === "submitting" || status === "success"}
-            className="mt-2 md:mt-4 w-full group py-3 md:py-4 px-6 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-white/20 hover:border-white/40 active:scale-[0.98] shadow-[0_4px_24px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_32px_rgba(255,255,255,0.05)] transition-[background-color,border-color,box-shadow,opacity,transform] disabled:opacity-70 disabled:cursor-not-allowed text-sm md:text-base"
+              className="mt-2 md:mt-4 w-full group py-3 md:py-4 px-6 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-white/20 hover:border-white/40 shadow-[0_4px_24px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_32px_rgba(255,255,255,0.05)] transition-[background-color,border-color,box-shadow] disabled:opacity-70 disabled:cursor-not-allowed text-sm md:text-base"
             >
               {status === "submitting" ? (
                 <>
@@ -290,8 +261,8 @@ export default function Contact() {
                   />
                 </>
               )}
-            </button>
-          </form>
+            </motion.button>
+          </motion.form>
         </div>
       </div>
     </section>

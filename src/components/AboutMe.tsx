@@ -1,31 +1,15 @@
 import { useRef, useState } from "react";
 import { Code2, Target, Sparkles } from "lucide-react";
-import { enterOnScroll, scrub, useScope } from "../animations";
+import { m as motion, useReducedMotion } from "framer-motion";
+import { reveal, revealViewport, sequence, useParallax } from "../animations";
 
 export default function AboutMe() {
   const [imageError, setImageError] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
-  useScope(sectionRef, () => {
-    const section = sectionRef.current;
-    if (!section) return;
-    enterOnScroll(section.querySelectorAll("[data-anim-item]"), {
-      scrollTarget: section.querySelector("[data-anim-container]"),
-      staggerDelay: 200,
-      delay: 100,
-      offset: 30,
-      duration: 600,
-      ease: "outQuad",
-    });
-    const image = section.querySelector("[data-about-image-parallax]");
-    if (image) {
-      scrub(
-        image,
-        { y: [-36, 36] },
-        { scrollTarget: section, sync: true },
-      );
-    }
-  });
+  const reduced = !!useReducedMotion();
+  const item = reveal(30, 0.6, "y", reduced);
+  const y = useParallax(sectionRef, -36, 36);
 
   return (
     <section
@@ -34,40 +18,41 @@ export default function AboutMe() {
       className="min-h-screen flex flex-col justify-center py-24 bg-zinc-950 text-white relative scroll-mt-20"
     >
       <div className="container mx-auto px-6 lg:px-12 max-w-5xl">
-        <div
-          data-anim-container
+        <motion.div
+          initial="hidden" whileInView="visible" viewport={revealViewport}
+          variants={sequence(0.2, 0.1, reduced)}
           className="flex flex-col md:flex-row gap-16 items-center"
         >
           {/* Text Content */}
           <div className="w-full md:w-1/2 flex flex-col">
-            <div data-anim-item>
+            <motion.div variants={item}>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
                 Sobre <span className="text-zinc-500">Mí.</span>
               </h2>
               <div className="w-20 h-1 bg-white rounded-full mb-8"></div>
-            </div>
+            </motion.div>
 
-            <p
-              data-anim-item
+            <motion.p
+              variants={item}
               className="text-zinc-400 text-lg leading-relaxed mb-6 font-light"
             >
               Soy un desarrollador apasionado por crear interfaces dinámicas,
               modernas y sumamente interactivas. Mi objetivo principal es
               transformar diseños complejos en código limpio, accesible y fácil
               de mantener.
-            </p>
-            <p
-              data-anim-item
+            </motion.p>
+            <motion.p
+              variants={item}
               className="text-zinc-400 text-lg leading-relaxed mb-8 font-light"
             >
               Me enfoco en los detalles: desde animaciones fluidas que mejoran
               la experiencia del usuario hasta la optimización del rendimiento
               en cada frame. Creo firmemente que un buen diseño debe ir
               acompañado de una ejecución técnica impecable.
-            </p>
+            </motion.p>
 
-            <div
-              data-anim-item
+            <motion.div
+              variants={item}
               className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4"
             >
               <div className="flex flex-col gap-2 bg-black/50 p-6 rounded-2xl border border-white/5">
@@ -84,20 +69,20 @@ export default function AboutMe() {
                   Enfoque lógico y analítico para problemas complejos.
                 </p>
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Aesthetic Element / Image */}
-          <div
-            data-anim-item
+          <motion.div
+            variants={item}
             className="w-full md:w-1/2 relative aspect-4/5 rounded-3xl overflow-hidden group transform-gpu"
           >
             <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent z-10"></div>
             {/* Using a sleek placeholder gradient/texture for now, could be replaced with a real aesthetic photo */}
-            <div className="absolute inset-0 bg-zinc-900 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-50 mix-blend-overlay"></div>
+            <div className="absolute inset-0 bg-zinc-900 bg-[url('/noise.svg')] opacity-50 mix-blend-overlay"></div>
             {!imageError && (
-              <div
-                data-about-image-parallax
+              <motion.div
+                style={{ y }}
                 className="absolute inset-[-8%] transform-gpu"
               >
                 <img
@@ -108,7 +93,7 @@ export default function AboutMe() {
                   onError={() => setImageError(true)}
                   className="w-full h-full object-cover grayscale-0 md:grayscale md:group-hover:grayscale-0 transition-[filter,scale] duration-500 ease-out scale-100 md:group-hover:scale-[1.03]"
                 />
-              </div>
+              </motion.div>
             )}
             {imageError && (
               <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-900" />
@@ -122,8 +107,8 @@ export default function AboutMe() {
                 </span>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

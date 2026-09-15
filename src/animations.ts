@@ -1,234 +1,87 @@
-import { useLayoutEffect } from "react";
-import {
-  animate,
-  createScope,
-  onScroll,
-  stagger,
-  utils,
-  type AnimationParams,
-  type ScrollObserver,
-  type TargetsParam,
-} from "animejs";
+import { useSyncExternalStore } from "react";
+import { useReducedMotion, useScroll, useTransform } from "framer-motion";
+import type { RefObject } from "react";
+import type { Variants } from "framer-motion";
 
-type FadeOptions = {
-  delay?: number;
-  staggerDelay?: number;
-  offset?: number;
-  axis?: "x" | "y";
-  duration?: number;
-  ease?: string;
-};
+export const expoOut = [0.16, 1, 0.3, 1] as const;
+export const revealViewport = { once: true, margin: "0px 0px -96px 0px" } as const;
 
-export function prefersReducedMotion() {
-  return (
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-}
-
-function fade(
-  targets: TargetsParam | null,
-  opts: FadeOptions,
-  autoplay?: ScrollObserver,
-) {
-  if (!targets) return;
-  const {
-    delay = 0,
-    staggerDelay,
-    offset = 24,
-    axis = "y",
-    duration = 700,
-    ease = "outExpo",
-  } = opts;
-  const animationDelay = prefersReducedMotion()
-    ? 0
-    : staggerDelay
-      ? stagger(staggerDelay, { start: delay })
-      : delay;
-  if (axis === "x") {
-    utils.set(targets, { opacity: 0, x: offset });
-    if (autoplay) {
-      return animate(targets, {
-        opacity: 1,
-        x: 0,
-        duration: prefersReducedMotion() ? 0 : duration,
-        delay: animationDelay,
-        ease,
-        autoplay,
-      });
-    }
-    return animate(targets, {
+export function reveal(
+  offset = 24,
+  duration = 0.7,
+  axis: "x" | "y" = "y",
+  reduced = false,
+): Variants {
+  return {
+    hidden: {
+      opacity: reduced ? 1 : 0,
+      x: !reduced && axis === "x" ? offset : 0,
+      y: !reduced && axis === "y" ? offset : 0,
+    },
+    visible: {
       opacity: 1,
       x: 0,
-      duration: prefersReducedMotion() ? 0 : duration,
-      delay: animationDelay,
-      ease,
-    });
-  }
-
-  utils.set(targets, { opacity: 0, y: offset });
-  if (autoplay) {
-    return animate(targets, {
-      opacity: 1,
       y: 0,
-      duration: prefersReducedMotion() ? 0 : duration,
-      delay: animationDelay,
-      ease,
-      autoplay,
-    });
-  }
-  return animate(targets, {
-    opacity: 1,
-    y: 0,
-    duration: prefersReducedMotion() ? 0 : duration,
-    delay: animationDelay,
-    ease,
-  });
+      transition: { duration: reduced ? 0 : duration, ease: expoOut },
+    },
+  };
 }
 
-export function fadeUp(targets: TargetsParam | null, opts: FadeOptions = {}) {
-  return fade(targets, opts);
+export function sequence(
+  staggerChildren: number,
+  delayChildren = 0,
+  reduced = false,
+): Variants {
+  return {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: reduced ? 0 : staggerChildren,
+        delayChildren: reduced ? 0 : delayChildren,
+      },
+    },
+  };
 }
 
-export function enterOnScroll(
-  targets: TargetsParam | null,
-  opts: FadeOptions & { scrollTarget?: TargetsParam | null; enter?: string } = {},
+export function usePop(scale = 1.05, y = 0) {
+  const reduced = useReducedMotion();
+  return {
+    whileHover: reduced ? undefined : { scale, y },
+    whileTap: reduced ? undefined : { scale: Math.max(scale - 0.06, 0.9) },
+    transition: { duration: 0.3, ease: "easeOut" as const },
+  };
+}
+
+const desktopQuery = "(min-width: 768px)";
+function subscribeDesktop(callback: () => void) {
+  const query = window.matchMedia(desktopQuery);
+  query.addEventListener("change", callback);
+  return () => query.removeEventListener("change", callback);
+}
+
+export function useParallax(
+  target: RefObject<HTMLElement | null>,
+  from: number,
+  to: number,
+  desktopOnly = false,
+  neutral = 0,
 ) {
-  if (!targets) return;
-  if (prefersReducedMotion()) {
-    if (opts.axis === "x") {
-      utils.set(targets, { opacity: 1, x: 0 });
-    } else {
-      utils.set(targets, { opacity: 1, y: 0 });
-    }
-    return;
-  }
-  const { scrollTarget, enter = "bottom top+=96", ...fadeOpts } = opts;
-  return fade(
-    targets,
-    fadeOpts,
-    onScroll({
-      target: scrollTarget ?? targets,
-      enter,
-      repeat: false,
-    }),
+  const reduced = useReducedMotion();
+  const desktop = useSyncExternalStore(
+    subscribeDesktop,
+    () => window.matchMedia(desktopQuery).matches,
+    () => false,
   );
-}
-
-type ScrubOptions = {
-  scrollTarget?: TargetsParam | null;
-  enter?: string;
-  leave?: string;
-  sync?: boolean | number | string;
-};
-
-export function scrub(
-  targets: TargetsParam | null,
-  params: Omit<AnimationParams, "autoplay">,
-  opts: ScrubOptions = {},
-) {
-  if (!targets || prefersReducedMotion()) return;
-  const {
-    scrollTarget,
-    enter = "bottom top",
-    leave = "top bottom",
-    sync = true,
-  } = opts;
-  return animate(targets, {
-    ...params,
-    autoplay: onScroll({
-      target: scrollTarget ?? targets,
-      enter,
-      leave,
-      sync,
-      repeat: true,
-    }),
+  const { scrollYProgress } = useScroll({
+    target,
+    offset: ["start end", "end start"],
   });
+  const value = useTransform(scrollYProgress, [0, 1], [from, to]);
+  return reduced || (desktopOnly && !desktop) ? neutral : value;
 }
 
-type PopOptions = {
-  scale?: number;
-  y?: number;
-  duration?: number;
-};
-
-export function hoverPop(els: ArrayLike<Element>, opts: PopOptions = {}) {
-  const { scale = 1.05, y = 0, duration = 300 } = opts;
-  const items = Array.from(els);
-  if (prefersReducedMotion() || items.length === 0) {
-    return () => {};
-  }
-  const cleanups = items.map((el) => {
-    const enter = () =>
-      animate(el, { scale, y, duration, ease: "outQuad" });
-    const leave = () =>
-      animate(el, { scale: 1, y: 0, duration, ease: "outQuad" });
-    const press = () =>
-      animate(el, { scale: Math.max(scale - 0.06, 0.9), duration: 120, ease: "outQuad" });
-    el.addEventListener("mouseenter", enter);
-    el.addEventListener("mouseleave", leave);
-    el.addEventListener("pointerdown", press);
-    el.addEventListener("pointerup", leave);
-    el.addEventListener("pointercancel", leave);
-    return () => {
-      el.removeEventListener("mouseenter", enter);
-      el.removeEventListener("mouseleave", leave);
-      el.removeEventListener("pointerdown", press);
-      el.removeEventListener("pointerup", leave);
-      el.removeEventListener("pointercancel", leave);
-    };
-  });
-  return () => cleanups.forEach((cleanup) => cleanup());
-}
-
-export function popIn(
-  el: Element,
-  opts: { duration?: number; scale?: number; y?: number } = {},
-) {
-  const { duration = 200, scale = 0.8, y = 20 } = opts;
-  return animate(el, {
-    opacity: [0, 1],
-    scale: [scale, 1],
-    y: [y, 0],
-    duration: prefersReducedMotion() ? 0 : duration,
-    ease: "outQuad",
-  });
-}
-
-export function popOut(
-  el: Element,
-  opts: { duration?: number; scale?: number; y?: number; onComplete?: () => void } = {},
-) {
-  const { duration = 200, scale = 0.8, y = 20, onComplete } = opts;
-  if (onComplete) {
-    return animate(el, {
-      opacity: 0,
-      scale,
-      y,
-      duration: prefersReducedMotion() ? 0 : duration,
-      ease: "outQuad",
-      onComplete,
-    });
-  }
-  return animate(el, {
-    opacity: 0,
-    scale,
-    y,
-    duration: prefersReducedMotion() ? 0 : duration,
-    ease: "outQuad",
-  });
-}
-
-export function useScope(
-  root: React.RefObject<HTMLElement | null>,
-  setup: () => (() => void) | void,
-  deps: unknown[] = [],
-) {
-  useLayoutEffect(() => {
-    const el = root.current;
-    if (!el) return;
-    const scope = createScope({ root: el }).add(setup);
-    return () => scope.revert();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps);
+export function scrollBehavior(): ScrollBehavior {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ? "instant"
+    : "smooth";
 }
