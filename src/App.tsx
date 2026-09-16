@@ -1,4 +1,3 @@
-import AmbientBackground from "./components/AmbientBackground";
 import Navbar from "./components/Navbar";
 import { domMax, LazyMotion, MotionConfig } from "framer-motion";
 import Hero from "./components/Hero";
@@ -14,15 +13,15 @@ function App() {
       <LazyMotion features={domMax} strict>
         <ScrollStateProvider>
           <div className="relative isolate bg-zinc-950 min-h-screen text-white font-sans selection:bg-white selection:text-black">
-            <AmbientBackground />
-            <Navbar />
-            <main className="relative z-10">
-              <Hero />
-              <AboutMe />
-              <Tech />
-              <Projects />
-              <Contact />
-            </main>
+            <Navbar>
+              <main className="relative z-10">
+                <Hero />
+                <AboutMe />
+                <Tech />
+                <Projects />
+                <Contact />
+              </main>
+            </Navbar>
           </div>
         </ScrollStateProvider>
       </LazyMotion>
