@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { MouseEvent, ReactNode } from "react";
-import { AnimatePresence, m as motion, useIsPresent, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m as motion, useReducedMotion } from "framer-motion";
 import { cn } from "../utils";
 import { useScrollState } from "../hooks/useScrollState";
 import { expoOut, scrollBehavior } from "../animations";
@@ -13,8 +13,8 @@ const navLinks = [
   { name: "Proyectos", href: "#projects" },
 ];
 
-// The reference animates the label first, holds the scene, then changes the page.
-const menuTiming = { label: 0.6, openingPause: 0.75, closingPause: 0.95, scene: 0.7 };
+// The scene starts immediately; the two labels dissolve during its transition.
+const menuTiming = { label: 0.45, scene: 0.7 };
 
 function navigateToSection(href: string) {
   const targetId = href.replace("#", "");
@@ -103,7 +103,7 @@ export default function Navbar({ children }: { children: ReactNode }) {
             scaleY: compact ? 1 - (gap * 2) / pageSnapshot.height : 1,
             borderRadius: compact ? 4 : 0,
           }}
-          transition={{ duration: reduced ? 0 : menuTiming.scene, delay: reduced ? 0 : isMobileMenuOpen ? menuTiming.openingPause : menuTiming.closingPause + 0.12, ease: expoOut }}
+          transition={{ duration: reduced ? 0 : menuTiming.scene, delay: isMobileMenuOpen || reduced ? 0 : 0.12, ease: expoOut }}
           style={pageSnapshot ? { position: "fixed", inset: 0, height: "100dvh", minHeight: 0, overflow: "hidden" } : undefined}
           className="relative isolate min-h-screen bg-zinc-950"
         >
@@ -231,8 +231,6 @@ function CompactMenu({ reduced, gap, headerInset, isScrolled, activeSection, onC
   }, []);
 
   const links = [...navLinks, { name: "Hablemos", href: "#contact" }];
-  const openingPause = reduced ? 0 : menuTiming.openingPause;
-  const closingPause = reduced ? 0 : menuTiming.closingPause;
 
   return (
     <motion.dialog
@@ -246,15 +244,15 @@ function CompactMenu({ reduced, gap, headerInset, isScrolled, activeSection, onC
       variants={{
         hidden: {},
         visible: {},
-        exit: { transition: { duration: reduced ? 0 : menuTiming.closingPause + menuTiming.scene + 0.12 } },
+        exit: { transition: { duration: reduced ? 0 : menuTiming.scene + 0.12 } },
       }}
       className="fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none overflow-hidden border-0 bg-transparent p-0 text-white backdrop:bg-transparent"
     >
       <motion.div
         variants={{
           hidden: { inset: 0, borderRadius: 0 },
-          visible: { inset: gap, borderRadius: 4, transition: { duration: reduced ? 0 : menuTiming.scene, delay: openingPause, ease: expoOut } },
-          exit: { inset: 0, borderRadius: 0, transition: { duration: reduced ? 0 : menuTiming.scene, delay: reduced ? 0 : closingPause + 0.12, ease: expoOut } },
+          visible: { inset: gap, borderRadius: 4, transition: { duration: reduced ? 0 : menuTiming.scene, ease: expoOut } },
+          exit: { inset: 0, borderRadius: 0, transition: { duration: reduced ? 0 : menuTiming.scene, delay: reduced ? 0 : 0.12, ease: expoOut } },
         }}
         className="absolute isolate flex flex-col overflow-hidden"
       >
@@ -262,8 +260,8 @@ function CompactMenu({ reduced, gap, headerInset, isScrolled, activeSection, onC
           aria-hidden="true"
           variants={{
             hidden: { opacity: 0, backdropFilter: "blur(0px)" },
-            visible: { opacity: 1, backdropFilter: reduced ? "blur(0px)" : "blur(10px)", transition: { duration: reduced ? 0 : 0.35, delay: reduced ? 0 : openingPause + 0.08 } },
-            exit: { opacity: 0, backdropFilter: "blur(0px)", transition: { duration: reduced ? 0 : 0.4, delay: reduced ? 0 : closingPause + 0.22 } },
+            visible: { opacity: 1, backdropFilter: reduced ? "blur(0px)" : "blur(10px)", transition: { duration: reduced ? 0 : 0.35, delay: reduced ? 0 : 0.08 } },
+            exit: { opacity: 0, backdropFilter: "blur(0px)", transition: { duration: reduced ? 0 : 0.4, delay: reduced ? 0 : 0.22 } },
           }}
           className="pointer-events-none absolute inset-0 -z-10"
         />
@@ -271,16 +269,16 @@ function CompactMenu({ reduced, gap, headerInset, isScrolled, activeSection, onC
           aria-hidden="true"
           variants={{
             hidden: { opacity: 0 },
-            visible: { opacity: 1, transition: { duration: reduced ? 0 : 0.4, delay: reduced ? 0 : openingPause + 0.2 } },
-            exit: { opacity: 0, transition: { duration: reduced ? 0 : 0.32, delay: reduced ? 0 : closingPause + 0.12 } },
+            visible: { opacity: 1, transition: { duration: reduced ? 0 : 0.4, delay: reduced ? 0 : 0.2 } },
+            exit: { opacity: 0, transition: { duration: reduced ? 0 : 0.32, delay: reduced ? 0 : 0.12 } },
           }}
           className="pointer-events-none absolute inset-0 -z-10 bg-zinc-900"
         />
         <motion.div
           variants={{
             hidden: { paddingTop: isScrolled ? 16 : 24, paddingLeft: 24, paddingRight: 24 },
-            visible: { paddingTop: headerInset, paddingLeft: gap, paddingRight: gap, transition: { duration: reduced ? 0 : menuTiming.scene, delay: openingPause, ease: expoOut } },
-            exit: { paddingTop: isScrolled ? 16 : 24, paddingLeft: 24, paddingRight: 24, transition: { duration: reduced ? 0 : menuTiming.scene, delay: reduced ? 0 : closingPause + 0.12, ease: expoOut } },
+            visible: { paddingTop: headerInset, paddingLeft: gap, paddingRight: gap, transition: { duration: reduced ? 0 : menuTiming.scene, ease: expoOut } },
+            exit: { paddingTop: isScrolled ? 16 : 24, paddingLeft: 24, paddingRight: 24, transition: { duration: reduced ? 0 : menuTiming.scene, delay: reduced ? 0 : 0.12, ease: expoOut } },
           }}
           className="z-10 flex shrink-0 items-center justify-between"
         >
@@ -297,7 +295,7 @@ function CompactMenu({ reduced, gap, headerInset, isScrolled, activeSection, onC
             aria-label="Secciones"
             variants={{
               hidden: {},
-              visible: { transition: { delayChildren: reduced ? 0 : openingPause + 0.35, staggerChildren: reduced ? 0 : 0.075 } },
+              visible: { transition: { delayChildren: reduced ? 0 : 0.35, staggerChildren: reduced ? 0 : 0.075 } },
               exit: {},
             }}
             className="my-auto flex shrink-0 flex-col items-start gap-1 py-8"
@@ -311,7 +309,7 @@ function CompactMenu({ reduced, gap, headerInset, isScrolled, activeSection, onC
                   variants={{
                     hidden: { y: reduced ? 0 : "110%", opacity: 0 },
                     visible: { y: 0, opacity: 1, transition: { duration: reduced ? 0 : 0.65, ease: expoOut } },
-                    exit: { y: reduced ? 0 : "-30%", opacity: 0, transition: { duration: reduced ? 0 : 0.22, delay: closingPause } },
+                    exit: { y: reduced ? 0 : "-30%", opacity: 0, transition: { duration: reduced ? 0 : 0.22 } },
                   }}
                   className="block py-1 text-3xl font-normal uppercase tracking-tight text-zinc-300 transition-colors hover:text-white aria-[current=location]:text-white focus-visible:outline-offset-[-2px]"
                 >
@@ -322,7 +320,7 @@ function CompactMenu({ reduced, gap, headerInset, isScrolled, activeSection, onC
           </motion.nav>
 
           <motion.div
-            variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { delay: reduced ? 0 : openingPause + 0.7, duration: reduced ? 0 : 0.3 } }, exit: { opacity: 0, transition: { duration: reduced ? 0 : 0.22, delay: closingPause } } }}
+            variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { delay: reduced ? 0 : 0.7, duration: reduced ? 0 : 0.3 } }, exit: { opacity: 0, transition: { duration: reduced ? 0 : 0.22 } } }}
             className="flex shrink-0 items-end justify-between gap-4 text-xs text-zinc-400"
           >
             <a href="#contact" onClick={(event) => onNavigate(event, "#contact")} className="underline underline-offset-4 hover:text-white">Construyamos algo juntos.</a>
@@ -336,22 +334,32 @@ function CompactMenu({ reduced, gap, headerInset, isScrolled, activeSection, onC
 
 
 function MenuLabel({ reduced }: { reduced: boolean }) {
-  const isPresent = useIsPresent();
-  // Both clicks send the new word up out of its mask, then down with a small rebound.
-  const bounce = { y: reduced ? 0 : ["0%", "-125%", "-125%", "18%", "-7%", "0%"] };
+  const clear = { opacity: 1, filter: "blur(0px)" };
+  const blurred = { opacity: 0, filter: reduced ? "blur(0px)" : "blur(6px)" };
+  const fadeOut = { duration: reduced ? 0 : 0.28, ease: "easeInOut" as const };
+  const fadeIn = { duration: reduced ? 0 : menuTiming.label, delay: reduced ? 0 : 0.12, ease: "easeInOut" as const };
 
   return (
-    <span aria-hidden="true" className="block h-4 w-14 overflow-hidden text-right">
+    <span aria-hidden="true" className="relative block h-4 w-14 text-right">
       <motion.span
-        className="block h-4 leading-4"
-        variants={{ hidden: { y: "0%" }, visible: bounce, exit: bounce }}
-        transition={{
-          duration: reduced ? 0 : menuTiming.label,
-          times: [0, 0.22, 0.4, 0.72, 0.88, 1],
-          ease: "easeInOut",
+        className="absolute inset-0 block leading-4"
+        variants={{
+          hidden: clear,
+          visible: { ...blurred, transition: fadeOut },
+          exit: { ...clear, transition: fadeIn },
         }}
       >
-        {isPresent ? "CERRAR" : "MENÚ"}
+        MENÚ
+      </motion.span>
+      <motion.span
+        className="absolute inset-0 block leading-4"
+        variants={{
+          hidden: blurred,
+          visible: { ...clear, transition: fadeIn },
+          exit: { ...blurred, transition: fadeOut },
+        }}
+      >
+        CERRAR
       </motion.span>
     </span>
   );
