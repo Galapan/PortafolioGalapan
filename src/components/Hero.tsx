@@ -51,7 +51,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="home"
-      className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden bg-zinc-950 text-white px-6 w-full pt-20 pb-12 md:pb-0 scroll-mt-20"
+      className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden text-white px-6 w-full pt-20 pb-12 md:pb-0 scroll-mt-20"
     >
       <div className="container mx-auto max-w-5xl z-10 w-full mt-10 md:mt-0">
         <div className="flex flex-col md:flex-row items-center justify-center gap-12 lg:gap-24">
@@ -63,7 +63,7 @@ export default function Hero() {
             className="relative -top-1 w-full max-w-[280px] sm:max-w-[320px] md:max-w-[400px] flex-shrink-0 transform-gpu"
           >
             {/* Glowing Orbs behind the avatar (grayscale) */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-zinc-700/20 rounded-full blur-[60px] md:blur-[80px] -z-10"></div>
+            <div data-ambient-glow="hero" aria-hidden="true" className="ambient-fallback absolute -inset-24 -z-10"></div>
 
             <motion.div
               style={{ scale }}

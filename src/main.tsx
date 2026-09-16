@@ -8,3 +8,7 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 )
+
+if (import.meta.env.DEV && new URLSearchParams(window.location.search).has("perf")) {
+  void import("./dev/performanceProbe");
+}

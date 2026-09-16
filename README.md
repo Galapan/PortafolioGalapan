@@ -71,3 +71,41 @@ Si te ha interesado mi trabajo o tienes alguna pregunta, no dudes en conectar co
 - **Email:** [tu-correo@ejemplo.com](mailto:tu-correo@ejemplo.com)
 
 ---
+
+## Renderizado de efectos y rendimiento
+
+React mantiene el contenido y la navegación en HTML; Three.js renderiza los halos
+decorativos de Inicio y Tecnologías en un único lienzo WebGL2. Se carga en un
+fragmento separado después de la entrada inicial. No reemplaza el renderizado del
+formulario ni de los textos. Three.js añade aproximadamente 129 kB comprimidos (gzip)
+a esa descarga diferida; es un coste adicional de usar WebGL para estos efectos.
+
+- Renderizado bajo demanda: scroll, cambios de tamaño o carga de imágenes.
+- Sin bucle de dibujo permanente; pausa cuando la pestaña está oculta.
+- Máximo de un millón de píxeles y escala adaptativa si se acumulan frames lentos.
+- Fondo CSS con movimiento reducido, sin WebGL2 o durante una pérdida de contexto.
+- Liberación de geometría, materiales, contexto, eventos y observadores al desmontar.
+- El navbar solo recibe cambios de sección/umbral, no cada píxel del scroll.
+- El menú anima opacidad y transformaciones; el desenfoque mantiene un radio fijo.
+
+### Medir en el dispositivo objetivo
+
+Con `npm run dev`, abrir `http://localhost:5173/?perf`. Los botones **Medir scroll**
+y **Medir menu** (este último en tamaño móvil) registran durante ocho segundos la
+cadencia de `requestAnimationFrame`, el percentil 95 y los intervalos mayores de
+25 ms. El panel solo existe en desarrollo; no se incluye en producción. Mantener
+la pestaña visible y esperar la carga inicial antes de medir. **Simular pérdida
+WebGL** permite comprobar el fondo CSS y restaura el contexto cinco segundos después.
+
+Es una comprobación de cadencia del navegador, no una medición del tiempo de GPU
+ni una garantía de 60 FPS. Para validar la entrega, repetir en la compilación de
+producción con Performance de DevTools, en móviles reales y equipos de gama
+baja. La meta es acercarse a 16,7 ms por frame durante las interacciones en una
+pantalla de 60 Hz; hardware, batería, carga y frecuencia de pantalla influyen.
+
+Comprobación local (2026-09-15, navegador integrado, viewport 390 × 844,
+servidor de desarrollo, sin limitación de CPU): scroll con p95 de 5,7 ms y
+0/1396 intervalos mayores de 25 ms; menú con p95 de 5,7 ms y 0/1365 intervalos
+mayores de 25 ms. Se verificó también la pérdida/restauración de WebGL y la
+activación del fondo CSS. Estas cifras describen esa ejecución local, no el
+rendimiento de un teléfono ni una comparación con la versión anterior.

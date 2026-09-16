@@ -98,7 +98,6 @@ export default function Tech() {
   const sectionRef = useRef<HTMLElement>(null);
   const reduced = !!useReducedMotion();
   const watermarkY = useParallax(sectionRef, -24, 24);
-  const glowY = useParallax(sectionRef, -56, 56);
   const cardPop = usePop(1.03, -4);
   const iconPop = usePop(1.15);
 
@@ -142,13 +141,10 @@ export default function Tech() {
     <section
       ref={sectionRef}
       id="tech"
-      className="min-h-screen flex flex-col justify-center py-24 bg-zinc-950 text-white relative overflow-hidden scroll-mt-20"
+      className="min-h-screen flex flex-col justify-center py-24 text-white relative overflow-hidden scroll-mt-20"
     >
-      <div className="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none">
-        <motion.div
-          style={{ y: glowY }}
-          className="w-full max-w-4xl h-96 bg-zinc-900/20 rounded-full blur-[100px] transform-gpu"
-        />
+      <div aria-hidden="true" className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div data-ambient-glow="tech" className="ambient-fallback w-full max-w-4xl h-96" />
       </div>
 
       <div className="container mx-auto px-6 lg:px-12 max-w-5xl">

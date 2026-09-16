@@ -173,11 +173,11 @@ function CompactMenu({ reduced, isScrolled, activeSection, onClose, onNavigate }
       animate="visible"
       exit="exit"
       variants={{
-        hidden: { opacity: 0, backdropFilter: "blur(0px)" },
-        visible: { opacity: 1, backdropFilter: reduced ? "blur(0px)" : "blur(12px)", transition: { duration: reduced ? 0 : 0.5 } },
-        exit: { opacity: 0, backdropFilter: "blur(0px)", transition: { duration: reduced ? 0 : 0.36, delay: reduced ? 0 : 0.18 } },
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { duration: reduced ? 0 : 0.5 } },
+        exit: { opacity: 0, transition: { duration: reduced ? 0 : 0.36, delay: reduced ? 0 : 0.18 } },
       }}
-      className="fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none overflow-hidden border-0 bg-zinc-950/30 p-3 text-white backdrop:bg-transparent"
+      className="fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none overflow-hidden border-0 bg-zinc-950/30 p-3 text-white backdrop-blur-md backdrop:bg-transparent"
     >
       <div className={cn("absolute inset-x-0 top-0 z-10 transition-[padding] duration-300", isScrolled ? "py-4" : "py-6")}>
         <div className="container mx-auto flex max-w-7xl items-center justify-between px-6 lg:px-12">

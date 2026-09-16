@@ -19,3 +19,17 @@
     }
   }
 }
+
+/* CSS remains the fallback for reduced motion, missing WebGL, or context loss. */
+.ambient-fallback {
+  background: radial-gradient(ellipse, rgb(166 166 166 / 0.14), transparent 70%);
+}
+.ambient-fallback[data-ambient-glow="tech"] {
+  background: radial-gradient(ellipse, rgb(166 166 166 / 0.06), transparent 70%);
+}
+html[data-ambient-renderer="webgl"] .ambient-fallback {
+  background: none;
+}
+
+[data-ambient-canvas] { visibility: hidden; }
+html[data-ambient-renderer="webgl"] [data-ambient-canvas] { visibility: visible; }
