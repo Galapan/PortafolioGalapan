@@ -86,7 +86,9 @@ export default function AboutMe() {
                 className="absolute inset-[-8%] transform-gpu"
               >
                 <img
-                  src="https://i.pinimg.com/736x/e6/a6/cc/e6a6ccf08c38edd428e13fe317f978af.jpg"
+                  src="/workspace.webp"
+                  srcSet="/workspace-400.webp 400w, /workspace.webp 720w"
+                  sizes="(min-width: 1024px) 510px, (min-width: 768px) 50vw, 100vw"
                   alt="Workspace setup"
                   loading="lazy"
                   decoding="async"

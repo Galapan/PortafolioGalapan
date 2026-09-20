@@ -1,6 +1,7 @@
 import {
   Mesh, OrthographicCamera, PlaneGeometry, Scene, ShaderMaterial, WebGLRenderer,
 } from "three";
+import { createFrameQualityMonitor } from "./frameQuality";
 
 // Two soft planes share one geometry and one WebGL context. No textures,
 // lights, shadows, postprocessing, or perpetual animation loop are needed.
@@ -38,6 +39,7 @@ export function createAmbientScene(canvas: HTMLCanvasElement) {
       uniforms: { strength: { value: anchor.dataset.ambientGlow === "hero" ? 0.14 : 0.06 } },
     });
     const mesh = new Mesh(geometry, material);
+    mesh.matrixAutoUpdate = false;
     scene.add(mesh);
     return { anchor, mesh, material };
   });
@@ -48,56 +50,68 @@ export function createAmbientScene(canvas: HTMLCanvasElement) {
   let width = 0;
   let height = 0;
   let quality = 1;
-  let lastFrame = 0;
-  let sampleCount = 0;
-  let slowFrames = 0;
   let needsResize = true;
   let hadVisibleGlow = false;
+  let drawingWidth = 0;
+  let drawingHeight = 0;
+  let forceDraw = true;
 
   function resize() {
+    if (width !== canvas.clientWidth || height !== canvas.clientHeight) forceDraw = true;
     width = canvas.clientWidth;
     height = canvas.clientHeight;
     // Soft glows need fewer pixels than text. Bound the framebuffer on retina/4K.
     const ratio = Math.min(window.devicePixelRatio || 1, 1.25, Math.sqrt(1_000_000 / Math.max(1, width * height))) * quality;
-    renderer.setSize(Math.max(1, Math.round(width * ratio)), Math.max(1, Math.round(height * ratio)), false);
+    const nextWidth = Math.max(1, Math.round(width * ratio));
+    const nextHeight = Math.max(1, Math.round(height * ratio));
+    // Anchor/content resizes can invalidate layout without changing the canvas.
+    // Avoid reallocating and clearing its framebuffer in that case.
+    if (nextWidth !== drawingWidth || nextHeight !== drawingHeight) {
+      renderer.setSize(nextWidth, nextHeight, false);
+      drawingWidth = nextWidth;
+      drawingHeight = nextHeight;
+      forceDraw = true;
+    }
     camera.right = width;
     camera.top = height;
     camera.updateProjectionMatrix();
     needsResize = false;
   }
 
-  function sampleFrame(time: number) {
-    const delta = time - lastFrame;
-    lastFrame = time;
-    // Only assess consecutive frames while interacting, never idle time.
-    if (delta <= 0 || delta > 80) { sampleCount = 0; slowFrames = 0; return; }
-    sampleCount++;
-    if (delta > 22) slowFrames++;
-    if (sampleCount < 60) return;
-    if (slowFrames > 12 && quality > 0.5) {
-      quality = Math.max(0.5, quality * 0.8);
-      needsResize = true;
-    }
-    sampleCount = 0;
-    slowFrames = 0;
-  }
+  const qualityMonitor = createFrameQualityMonitor((nextQuality) => {
+    quality = nextQuality;
+    needsResize = true;
+    invalidate();
+  });
 
-  function render(time: number) {
+  function render() {
     frame = 0;
     if (disposed || lost || document.hidden) return;
-    sampleFrame(time);
     if (needsResize) resize();
     let hasVisibleGlow = false;
+    let changed = forceDraw;
     for (const { anchor, mesh } of glows) {
       const rect = anchor.getBoundingClientRect();
-      mesh.visible = rect.bottom > 0 && rect.top < height && rect.right > 0 && rect.left < width;
+      const visible = rect.bottom > 0 && rect.top < height && rect.right > 0 && rect.left < width;
+      if (mesh.visible !== visible) changed = true;
+      mesh.visible = visible;
       if (!mesh.visible) continue;
       hasVisibleGlow = true;
-      mesh.position.set(rect.left + rect.width / 2, height - rect.top - rect.height / 2, 0);
-      mesh.scale.set(rect.width, rect.height, 1);
+      const x = rect.left + rect.width / 2;
+      const y = height - rect.top - rect.height / 2;
+      if (mesh.position.x !== x || mesh.position.y !== y || mesh.scale.x !== rect.width || mesh.scale.y !== rect.height) {
+        mesh.position.set(x, y, 0);
+        mesh.scale.set(rect.width, rect.height, 1);
+        mesh.updateMatrix();
+        changed = true;
+      }
     }
     // Clear once when the last glow leaves the viewport, then stop drawing.
-    if (hasVisibleGlow || hadVisibleGlow) renderer.render(scene, camera);
+    if (changed && (hasVisibleGlow || hadVisibleGlow)) {
+      renderer.render(scene, camera);
+      if (hasVisibleGlow) qualityMonitor.touch();
+    }
+    forceDraw = false;
     hadVisibleGlow = hasVisibleGlow;
     root.dataset.ambientRenderer = "webgl";
   }
@@ -109,19 +123,21 @@ export function createAmbientScene(canvas: HTMLCanvasElement) {
   function onVisibility() {
     cancelAnimationFrame(frame);
     frame = 0;
-    lastFrame = 0;
+    qualityMonitor.stop();
     invalidate();
   }
   function onContextLost(event: Event) {
     event.preventDefault();
     lost = true;
+    qualityMonitor.stop();
     cancelAnimationFrame(frame);
     frame = 0;
     delete root.dataset.ambientRenderer;
   }
-  function onContextRestored() { lost = false; needsResize = true; invalidate(); }
+  function onContextRestored() { lost = false; needsResize = true; forceDraw = true; invalidate(); }
 
   const observer = new ResizeObserver(onResize);
+  observer.observe(canvas);
   observer.observe(document.body);
   for (const anchor of anchors) observer.observe(anchor);
   window.addEventListener("scroll", invalidate, { passive: true });
@@ -135,6 +151,7 @@ export function createAmbientScene(canvas: HTMLCanvasElement) {
 
   return () => {
     disposed = true;
+    qualityMonitor.stop();
     cancelAnimationFrame(frame);
     observer.disconnect();
     window.removeEventListener("scroll", invalidate);

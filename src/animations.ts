@@ -1,5 +1,5 @@
-import { useSyncExternalStore } from "react";
-import { useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useSyncExternalStore } from "react";
+import { useReducedMotion, useMotionValue, scroll } from "framer-motion";
 import type { RefObject } from "react";
 import type { Variants } from "framer-motion";
 
@@ -72,12 +72,16 @@ export function useParallax(
     () => window.matchMedia(desktopQuery).matches,
     () => false,
   );
-  const { scrollYProgress } = useScroll({
-    target,
-    offset: ["start end", "end start"],
-  });
-  const value = useTransform(scrollYProgress, [0, 1], [from, to]);
-  return reduced || (desktopOnly && !desktop) ? neutral : value;
+  const enabled = !reduced && (!desktopOnly || desktop);
+  const value = useMotionValue(neutral);
+  useEffect(() => {
+    const element = target.current;
+    if (!enabled || !element) return;
+    return scroll((progress: number) => {
+      value.set(from + (to - from) * progress);
+    }, { target: element, offset: ["start end", "end start"] });
+  }, [enabled, target, from, to, value]);
+  return enabled ? value : neutral;
 }
 
 export function scrollBehavior(): ScrollBehavior {

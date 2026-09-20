@@ -42,7 +42,7 @@ export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
 
   const reduced = !!useReducedMotion();
-  const item = reveal(20, 0.6, "y", reduced);
+  const item = reveal(12, 0.3, "y", reduced);
   const cta = usePop(1.03, -2);
   const socialPop = usePop(1.15, -4);
   const scale = useParallax(sectionRef, 1, 0.95, true, 1);
@@ -57,7 +57,7 @@ export default function Hero() {
         <div className="flex flex-col md:flex-row items-center justify-center gap-12 lg:gap-24">
           {/* Left Column: Avatar Showcase */}
           <motion.div
-            initial={reduced ? false : { opacity: 0, scale: 0.9 }}
+            initial={false}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: reduced ? 0 : 1, ease: "easeOut" }}
             className="relative -top-1 w-full max-w-[280px] sm:max-w-[320px] md:max-w-[400px] flex-shrink-0 transform-gpu"
@@ -83,7 +83,7 @@ export default function Hero() {
           </motion.div>
 
           {/* Right Column: Text Content */}
-          <motion.div initial="hidden" animate="visible" variants={sequence(0.15, 0.2, reduced)} className="flex flex-col items-center md:items-start text-center md:text-left w-full">
+          <motion.div initial="hidden" animate="visible" variants={sequence(0.04, 0, reduced)} className="flex flex-col items-center md:items-start text-center md:text-left w-full">
             {/* Overline / Welcome Text */}
             <motion.div variants={item} className="mb-4">
               <span className="text-xs md:text-sm tracking-[0.2em] font-medium text-zinc-400 uppercase">
