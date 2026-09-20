@@ -1,5 +1,5 @@
 import { useRef, type MouseEvent } from "react";
-import { m as motion, useReducedMotion } from "framer-motion";
+import { m as motion, useReducedMotion, useSpring } from "framer-motion";
 import {
   ArrowRight,
   Github,
@@ -46,6 +46,7 @@ export default function Hero() {
   const cta = usePop(1.03, -2);
   const socialPop = usePop(1.15, -4);
   const scale = useParallax(sectionRef, 1, 0.95, true, 1);
+  const portraitScale = useSpring(1, { stiffness: 260, damping: 28, mass: 0.6 });
 
   return (
     <section
@@ -67,16 +68,35 @@ export default function Hero() {
 
             <motion.div
               style={{ scale }}
+              onHoverStart={() => {
+                if (!reduced && window.matchMedia("(min-width: 768px) and (hover: hover) and (pointer: fine)").matches) {
+                  portraitScale.set(1.03);
+                }
+              }}
+              onHoverEnd={() => portraitScale.set(1)}
               className="relative aspect-square rounded-full p-2 border border-white/10 bg-zinc-900/50 backdrop-blur-md overflow-hidden shadow-2xl shadow-black/50 group focus:outline-none cursor-default transform-gpu"
             >
-              <img
-                src="/Profile.jpeg"
-                alt="Bastian Alessandro"
-                loading="eager"
-                decoding="async"
-                fetchPriority="high"
-                className="w-full h-full object-cover rounded-full grayscale-0 md:grayscale md:group-hover:grayscale-0 md:group-focus:grayscale-0 transition-[filter,scale] duration-500 ease-out md:group-hover:scale-[1.03] md:group-focus:scale-[1.03]"
-              />
+              <motion.div
+                style={{ scale: reduced ? 1 : portraitScale }}
+                className="relative w-full h-full rounded-full overflow-hidden"
+              >
+                <img
+                  src="/Profile.jpeg"
+                  alt="Bastian Alessandro"
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
+                  className="w-full h-full object-cover"
+                />
+                {/* Fade a static grayscale layer instead of animating the filter. */}
+                <img
+                  src="/Profile.jpeg"
+                  alt=""
+                  aria-hidden="true"
+                  decoding="async"
+                  className="hidden md:block absolute inset-0 w-full h-full object-cover grayscale pointer-events-none transition-opacity duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] md:group-hover:opacity-0"
+                />
+              </motion.div>
               {/* Inner subtle glow ring */}
               <div className="absolute inset-0 rounded-full border border-white/5 pointer-events-none"></div>
             </motion.div>
